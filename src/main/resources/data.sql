@@ -1,0 +1,72 @@
+CREATE SCHEMA `ms` ;
+
+CREATE TABLE `ms`.`app_user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_id` VARCHAR(30) BINARY NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `name` VARCHAR(30) NOT NULL,
+  `phone` VARCHAR(30) NOT NULL,
+  `leader_id` VARCHAR(30) NOT NULL,
+  `has_locked` TINYINT(1) NOT NULL DEFAULT '0',
+  `has_passed` TINYINT(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `job_id_UNIQUE` (`job_id` ASC));
+
+CREATE TABLE `ms`.`user_profile` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `type_UNIQUE` (`type` ASC));
+
+CREATE TABLE `ms`.`app_user_user_profile` (
+  `user_id` INT NOT NULL,
+  `user_profile_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `user_profile_id`),
+  INDEX `user_profile_id_idx` (`user_profile_id` ASC),
+  CONSTRAINT `user_id`
+  FOREIGN KEY (`user_id`)
+  REFERENCES `ms`.`app_user` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `user_profile_id`
+  FOREIGN KEY (`user_profile_id`)
+  REFERENCES `ms`.`user_profile` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+CREATE TABLE `ms`.`persistent_login` (
+  `username` VARCHAR(30) NOT NULL,
+  `series` VARCHAR(64) NOT NULL,
+  `token` VARCHAR(64) NOT NULL,
+  `last_used` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`series`));
+
+CREATE TABLE `ms`.`user_attempt` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(30) BINARY NOT NULL,
+  `attempt` VARCHAR(30) NOT NULL,
+  `last_modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC));
+
+INSERT INTO `ms`.`user_profile` (`id`, `type`) VALUES ('1', 'ADMIN');
+INSERT INTO `ms`.`user_profile` (`id`, `type`) VALUES ('2', 'AREA');
+INSERT INTO `ms`.`user_profile` (`id`, `type`) VALUES ('3', 'GROUP');
+INSERT INTO `ms`.`user_profile` (`id`, `type`) VALUES ('4', 'REGULAR');
+
+-- password abc123456
+INSERT INTO `ms`.`app_user` (`id`, `job_id`, `password`, `name`, `phone`, `leader_id`)
+VALUES ('1', 'admin01', '$2a$10$TANjWG0UHIbBXpo204W4OO.Mv14znYi90DbLlgmXishiVsEpUrIJO', '管理员01', '10086', 'NONE');
+
+INSERT INTO `ms`.`app_user` (`id`, `job_id`, `password`, `name`, `phone`, `leader_id`)
+VALUES ('2', 'admin02', '$2a$10$TANjWG0UHIbBXpo204W4OO.Mv14znYi90DbLlgmXishiVsEpUrIJO', '管理员02', '10086', 'NONE');
+
+INSERT INTO `ms`.`app_user` (`id`, `job_id`, `password`, `name`, `phone`, `leader_id`)
+VALUES ('3', 'admin03', '$2a$10$TANjWG0UHIbBXpo204W4OO.Mv14znYi90DbLlgmXishiVsEpUrIJO', '管理员03', '10086', 'NONE');
+
+SELECT id FROM  `ms`.`app_user` where job_id='admin01' ;
+SELECT id FROM  `ms`.`user_profile` where type='ADMIN' ;
+
+INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('1', '1');
+INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('2', '1');
+INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('3', '1');
