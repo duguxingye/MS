@@ -101,9 +101,7 @@
                         </div>
 
                         <br>
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                            <i class="material-icons right">确定新增会员</i>
-                        </button>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">确定新增会员</button>
                         <a style="padding-left: 50px;" href="<c:url value='/list' />">取消</a>
                     </form:form>
 

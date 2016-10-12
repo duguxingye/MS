@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <header>
-    <nav class="top-nav blue lighten-1" style="background-image: url('/static/image/index/nav-bg.png');">
+    <nav class="top-nav blue lighten-1" style="background-image: url('/static/image/index/main-header.png'); background-size:cover;">
         <div class="container">
             <div class="nav-wrapper"><a class="page-title">泰允升</a></div>
         </div>
