@@ -2,6 +2,7 @@ package com.tys.ms.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuickPasswordEncodingGenerator {
@@ -13,13 +14,18 @@ public class QuickPasswordEncodingGenerator {
         }
     }
 
+
+
     /**
      * @param args
      */
     public static void main(String[] args) {
-        String password = "123456";
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        System.out.println(passwordEncoder.encode(password));
+
+
+
+//        String password = "123456";
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        System.out.println(passwordEncoder.encode(password));
 
 //        System.out.println(new Date());
 //        List<Integer> list = new ArrayList<Integer>();

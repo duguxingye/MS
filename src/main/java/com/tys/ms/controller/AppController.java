@@ -63,20 +63,7 @@ public class AppController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(HttpServletRequest request, HttpServletResponse response,ModelMap model) {
-//        GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
-//        String resStr = "{}";
-//        String geetestUserId = "tys-ms"; //自定义geetestUserId
-//        //进行验证预处理
-//        int gtServerStatus = gtSdk.preProcess(geetestUserId);
-//        //将服务器状态设置到session中
-//        request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
-//        //将geetestUserId设置到session中
-//        request.getSession().setAttribute("geetestUserId", geetestUserId);
-//
-//        resStr = gtSdk.getResponseStr();
-//        model.addAttribute("resStr", resStr);
-
+    public String loginPage() {
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
         } else {
@@ -88,22 +75,18 @@ public class AppController {
     @ResponseBody
     public String geetValidate(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
-
         String resStr = "{}";
-
-        //自定义userid
-        String userid = "test";
-
+        String geetUserId = "tys-user"; //自定义geetUserId
         //进行验证预处理
-        int gtServerStatus = gtSdk.preProcess(userid);
-
+        int gtServerStatus = gtSdk.preProcess(geetUserId);
         //将服务器状态设置到session中
         request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
-        //将userid设置到session中
-        request.getSession().setAttribute("userid", userid);
+        //将geetUserId设置到session中
+        request.getSession().setAttribute("geetUserId", geetUserId);
 
         resStr = gtSdk.getResponseStr();
         model.addAttribute("resStr", resStr);
+
         return resStr;
     }
 
@@ -119,15 +102,15 @@ public class AppController {
 //        //从session中获取gt-server状态
 //        int gt_server_status_code = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
 //
-//        //从session中获取userid
-//        String userid = (String)request.getSession().getAttribute("userid");
+//        //从session中获取geetUserId
+//        String geetUserId = (String)request.getSession().getAttribute("geetUserId");
 //
 //        int gtResult = 0;
 //
 //        if (gt_server_status_code == 1) {
 //            //gt-server正常，向gt-server进行二次验证
 //
-//            gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, userid);
+//            gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, geetUserId);
 //            System.out.println(gtResult);
 //        } else {
 //            // gt-server非正常情况下，进行failback模式验证
@@ -193,15 +176,9 @@ public class AppController {
                     it.remove();
                 }
             }
-//            while (users.iterator().hasNext()) {
-//                if (users.iterator().next().getLeaderId().equals("NONE")) {
-//                    users.iterator().remove();
-//                }
-//            }
         } else {
-            users = userService.findAllDownUsers(getPrincipal());
+            users = userService.findAllDownUsers(loginUser.getJobId());
         }
-//        List<User> users = userService.findAllDownUsers(getPrincipal());
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
         return "userList";

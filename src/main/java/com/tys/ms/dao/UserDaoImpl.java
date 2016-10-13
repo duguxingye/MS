@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Repository("userDao")
@@ -72,12 +73,14 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         List<User> targetUsers = null;
         List<User> users1 = findDownUsers(leaderId);
         targetUsers = users1;
+
         for (User user1 : users1) {
             List<User> users2 = findDownUsers(user1.getJobId());
             for (User user2 : users2) {
                 targetUsers.add(user2);
             }
         }
+
         return targetUsers;
     }
 
