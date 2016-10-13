@@ -51,7 +51,7 @@ public class User implements Serializable {
     private boolean hasLocked = false;
 
     @Column(name="HAS_PASSED", nullable=false)
-    private boolean hasPassed = false;
+    private boolean hasPassed = true;
 
     public Integer getId() {
         return id;

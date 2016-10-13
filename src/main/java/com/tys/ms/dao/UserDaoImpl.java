@@ -74,12 +74,19 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         List<User> users1 = findDownUsers(leaderId);
         targetUsers = users1;
 
-        for (User user1 : users1) {
-            List<User> users2 = findDownUsers(user1.getJobId());
-            for (User user2 : users2) {
-                targetUsers.add(user2);
+        for (int i = 0; i < users1.size(); i++) {
+            List<User> users2 = findDownUsers(users1.get(i).getJobId());
+            for (int j = 0; j < users2.size(); j++) {
+                targetUsers.add(users2.get(j));
             }
         }
+
+//        for (User user1 : users1) {
+//            List<User> users2 = findDownUsers(user1.getJobId());
+//            for (User user2 : users2) {
+//                targetUsers.add(user2);
+//            }
+//        }
 
         return targetUsers;
     }
