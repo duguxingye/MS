@@ -25,10 +25,6 @@
 
                         <form:input type="hidden" path="id" id="id"/>
 
-                        <form:input type="hidden" path="hasLocked" id="hasLocked"/>
-
-                        <form:input type="hidden" path="hasPassed" id="hasPassed"/>
-
                         <div class="row">
                             <div class="input-field col s12 m6">
                                 <form:input placeholder="请输入工号" type="text" path="jobId" id="jobId" class="validate" />
@@ -99,6 +95,10 @@
                                 <form:errors path="userProfile" class="input-field red"/>
                             </div>
                         </div>
+
+                        <form:input type="hidden" path="hasPassed" id="hasPassed"/>
+
+                        <form:input type="hidden" path="hasLocked" id="hasLocked"/>
 
                         <br>
                         <button class="btn waves-effect waves-light" type="submit" name="action">确定新增会员</button>

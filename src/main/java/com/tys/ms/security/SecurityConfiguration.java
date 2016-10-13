@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -41,6 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter,CsrfFilter.class);
+
         http.authorizeRequests()
                 .antMatchers("/", "/info").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
                 .antMatchers("/", "/change-pwd-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")

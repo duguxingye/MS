@@ -2,7 +2,6 @@ package com.geetest.sdk.java.web.demo;
 
 /**
  * GeetestWeb配置文件
- * 
  *
  */
 public class GeetestConfig {

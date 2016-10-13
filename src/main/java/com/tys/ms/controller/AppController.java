@@ -19,7 +19,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -64,26 +63,19 @@ public class AppController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-
-    public String loginPage(ModelMap model) {
-
-        GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
-
-        String resStr = "{}";
-
-        //自定义userid
-        String userid = "test";
-
-        //进行验证预处理
-        int gtServerStatus = gtSdk.preProcess(userid);
-
+    public String loginPage(HttpServletRequest request, HttpServletResponse response,ModelMap model) {
+//        GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
+//        String resStr = "{}";
+//        String geetestUserId = "tys-ms"; //自定义geetestUserId
+//        //进行验证预处理
+//        int gtServerStatus = gtSdk.preProcess(geetestUserId);
 //        //将服务器状态设置到session中
 //        request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
-//        //将userid设置到session中
-//        request.getSession().setAttribute("userid", userid);
-
-        resStr = gtSdk.getResponseStr();
-        model.addAttribute("resStr", resStr);
+//        //将geetestUserId设置到session中
+//        request.getSession().setAttribute("geetestUserId", geetestUserId);
+//
+//        resStr = gtSdk.getResponseStr();
+//        model.addAttribute("resStr", resStr);
 
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
@@ -215,7 +207,7 @@ public class AppController {
         return "userList";
     }
 
-//    @RequestMapping(value = { "/", "/all-list" }, method = RequestMethod.GET)
+//    @RequestMapping(value = "/list", method = RequestMethod.GET)
 //    public String listAllUsers(ModelMap model) {
 //        List<User> users = userService.findAllUsers();
 //        model.addAttribute("users", users);
@@ -265,7 +257,7 @@ public class AppController {
         }
         userService.saveUser(user);
 
-        model.addAttribute("success", "User " + user.getName() + " " + " registered successfully");
+        model.addAttribute("success", "会员 " + user.getName() + " " + " 添加成功");
         model.addAttribute("loginUser", getPrincipal());
         return "registrationDone";
     }

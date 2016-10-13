@@ -41,9 +41,9 @@
                         <table class="bordered">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>JOB ID</th>
+                                    <th>姓名</th>
+                                    <th>电话</th>
+                                    <th>工号</th>
                                     <sec:authorize access="hasRole('ADMIN')">
                                         <th></th>
                                         <th></th>
