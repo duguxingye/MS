@@ -168,14 +168,16 @@ public class AppController {
         List<User> users = null;
         User loginUser = userService.findByJobId(getPrincipal());
         if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-            users = userService.findAllUsers();
+            users = userService.findByType("ADMIN", false);
+//            users = userService.findAllUsers();
+//
+//            Iterator<User> it = users.iterator();
+//            while(it.hasNext()) {
+//                if(it.next().getLeaderId().equals("NONE")) {
+//                    it.remove();
+//                }
+//            }
 
-            Iterator<User> it = users.iterator();
-            while(it.hasNext()) {
-                if(it.next().getLeaderId().equals("NONE")) {
-                    it.remove();
-                }
-            }
         } else {
             users = userService.findAllDownUsers(loginUser.getJobId());
         }

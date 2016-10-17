@@ -3,12 +3,15 @@ package com.tys.ms.dao;
 import com.tys.ms.model.User;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +28,10 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
     }
 
     public User findByJobID(String jobId) {
+
         logger.info("JobID : {}", jobId);
+
+
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("jobId", jobId));
         User user = (User) criteria.uniqueResult();
@@ -36,6 +42,21 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
             System.out.println("wrong");
         }
         return user;
+
+//        try{
+//            User user = (User)  getSession()
+//                    .createQuery("SELECT u FROM User u WHERE u.jobId LIKE :jobId")
+//                    .setParameter("jobId", jobId)
+//                    .getSingleResult();
+//            if(user!=null){
+//                Hibernate.initialize(user.getUserProfile());
+//                logger.info("UserProfile : {}", user.getUserProfile());
+//            }
+//            return user;
+//        }catch(NoResultException ex){
+//            return null;
+//        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -52,8 +73,34 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
     }
 
     @Override
-    public List<User> findByType(String type) {
-        return null;
+    public List<User> findByType(String type, boolean belongTo) {
+        String hql;
+        if (belongTo) {
+            hql ="FROM User u left join u.userProfile p where p.type= :type";
+        } else {
+            hql ="from User u left join u.userProfile p where p.type<> :type";
+        }
+        Query query=getSession().createQuery(hql).setParameter("type", type);         //创建查询
+        List list=query.list();                          //执行查询
+        List<User> users = null;
+        for (int i = 0; i < list.size(); i++) {
+            Object[] obj=(Object[]) list.get(i);
+            User user=(User)obj[0];
+            System.out.println("--------------------------------------------------");
+            System.out.println(user);
+            users.add(user);
+            System.out.println("--------------------------------------------------");
+
+        }
+//        Iterator it=list.iterator();
+//        while(it.hasNext()){
+//            Object[] obj=(Object[])it.next();
+//            User user=(User)obj[0];
+//            System.out.println("--------------------------------------------------");
+//            System.out.println(user);
+//            System.out.println("--------------------------------------------------");
+//        }
+        return users;
     }
 
     public List<User> findDownUsers(String leaderId) {
