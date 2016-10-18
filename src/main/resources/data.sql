@@ -70,3 +70,23 @@ SELECT id FROM  `ms`.`user_profile` where type='ADMIN' ;
 INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('1', '1');
 INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('2', '1');
 INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES ('3', '1');
+
+CREATE TABLE `ms`.`product_ins` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `company` VARCHAR(30) NOT NULL,
+  `name` VARCHAR(30) NOT NULL,
+  `employee` VARCHAR(30) NOT NULL,
+  `employee_id` VARCHAR(30) BINARY NOT NULL,
+  `ins_company` VARCHAR(30) NOT NULL,
+  `ins_type` VARCHAR(30) NOT NULL,
+  `ins_illstration` VARCHAR(30) NOT NULL,
+  `ins_persion` VARCHAR(30) NULL,
+  `car_number` VARCHAR(30) NULL,
+  `ins_time` VARCHAR(30) NOT NULL,
+  `car_type` VARCHAR(30) NULL,
+  `car_business_money` VARCHAR(30) NULL,
+  `car_mandatory_money` VARCHAR(30) NULL,
+  `car_tax_money` VARCHAR(30) NULL,
+  `ins_money` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `employee_id_UNIQUE` (`employee_id` ASC));
