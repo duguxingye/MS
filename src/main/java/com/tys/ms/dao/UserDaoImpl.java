@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -82,10 +83,10 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         }
         Query query=getSession().createQuery(hql).setParameter("type", type);         //创建查询
         List list=query.list();                          //执行查询
-        List<User> users = null;
+        List<User> users =  new ArrayList<User>();
         for (int i = 0; i < list.size(); i++) {
             Object[] obj=(Object[]) list.get(i);
-            User user=(User)obj[0];
+            User user=(User) obj[0];
             System.out.println("--------------------------------------------------");
             System.out.println(user);
             users.add(user);
