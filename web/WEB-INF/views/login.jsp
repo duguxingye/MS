@@ -100,6 +100,12 @@
     <script src="static/js/init.js"></script>
     <script src="static/js/gt.js"></script>
     <script>
+
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15 // Creates a dropdown of 15 years to control year
+        });
+
         var handlerEmbed = function (captchaObj) {
             $("#embed-submit").click(function (e) {
                 var validate = captchaObj.getValidate();

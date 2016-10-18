@@ -20,13 +20,13 @@
                     <a href="#"><span class="white-text type-info">欢迎，你的身份是管理员</span></a>
                 </sec:authorize>
                 <sec:authorize access="hasRole('AREA')">
-                    <a href="#"><span class="white-text type-info">欢迎，你的身份是总监</span></a>
+                    <a href="#"><span class="white-text type-info">欢迎，你的身份是行销总监</span></a>
                 </sec:authorize>
                 <sec:authorize access="hasRole('GROUP')">
-                    <a href="#"><span class="white-text type-info">欢迎，你的身份是部经理</span></a>
+                    <a href="#"><span class="white-text type-info">欢迎，你的身份是行销部经理</span></a>
                 </sec:authorize>
                 <sec:authorize access="hasRole('REGULAR')">
-                    <a href="#"><span class="white-text type-info">欢迎，你的身份是经理</span></a>
+                    <a href="#"><span class="white-text type-info">欢迎，你的身份是行销经理</span></a>
                 </sec:authorize>
             </div>
         </li>
@@ -39,6 +39,21 @@
         <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('ADMIN')">
             <li class="bold"><a href="<c:url value='/list' />" class="waves-effect waves-teal">会员管理</a></li>
         </sec:authorize>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li class="bold"><a class="collapsible-header  waves-effect waves-teal">产品管理</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="color.html">车险</a></li>
+                            <li><a href="grid.html">寿险</a></li>
+                            <li><a href="helpers.html">团险</a></li>
+                            <li><a href="media-css.html">卡保险</a></li>
+                            <li><a href="sass.html">更多产品</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
 
     </ul>
 </header>
