@@ -2,8 +2,10 @@ package com.tys.ms.controller;
 
 import com.geetest.sdk.java.GeetestLib;
 import com.geetest.sdk.java.web.demo.GeetestConfig;
+import com.tys.ms.model.ProductIns;
 import com.tys.ms.model.User;
 import com.tys.ms.model.UserProfile;
+import com.tys.ms.service.ProductInsService;
 import com.tys.ms.service.UserProfileService;
 import com.tys.ms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class AppController {
 
     @Autowired
     UserProfileService userProfileService;
+
+    @Autowired
+    ProductInsService productInsService;
 
     @Autowired
     MessageSource messageSource;
@@ -89,59 +94,6 @@ public class AppController {
 
         return resStr;
     }
-
-//    @RequestMapping(value = "/geetValidate", method = RequestMethod.POST)
-//    @ResponseBody
-//    public String geetestValidate(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-//        GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
-//
-//        String challenge = request.getParameter(GeetestLib.fn_geetest_challenge);
-//        String validate = request.getParameter(GeetestLib.fn_geetest_validate);
-//        String seccode = request.getParameter(GeetestLib.fn_geetest_seccode);
-//
-//        //从session中获取gt-server状态
-//        int gt_server_status_code = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
-//
-//        //从session中获取geetUserId
-//        String geetUserId = (String)request.getSession().getAttribute("geetUserId");
-//
-//        int gtResult = 0;
-//
-//        if (gt_server_status_code == 1) {
-//            //gt-server正常，向gt-server进行二次验证
-//
-//            gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, geetUserId);
-//            System.out.println(gtResult);
-//        } else {
-//            // gt-server非正常情况下，进行failback模式验证
-//
-//            System.out.println("failback:use your own server captcha validate");
-//            gtResult = gtSdk.failbackValidateRequest(challenge, validate, seccode);
-//            System.out.println(gtResult);
-//        }
-//
-////        JSONObject data = new JSONObject();
-//        Map<String, String> data = new HashMap<String, String>();
-//
-//
-//        if (gtResult == 1) {
-//            // 验证成功
-////			PrintWriter out = response.getWriter();
-//
-//            data.put("status", "success");
-//            data.put("version", gtSdk.getVersionInfo());
-////			out.println(data.toString());
-//        }
-//        else {
-//            // 验证失败
-//
-//            data.put("status", "fail");
-//            data.put("version", gtSdk.getVersionInfo());
-////			PrintWriter out = response.getWriter();
-////			out.println(data.toString());
-//        }
-//        return data.toString();
-//    }
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response){
@@ -303,6 +255,14 @@ public class AppController {
     public String deleteUser(@PathVariable String jobId) {
         userService.deleteUserByJobId(jobId);
         return "redirect:/list";
+    }
+
+    @RequestMapping(value = "/list-product-car", method = RequestMethod.GET)
+    public String listProductCar(ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType("car");
+        model.addAttribute("productInsList", productInsList);
+        model.addAttribute("loginUser", getPrincipal());
+        return "listProductCar";
     }
 
     @ModelAttribute("roles")

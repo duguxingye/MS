@@ -18,7 +18,9 @@
 	<main>
 		<div class="container">
 			<div class="section">
+
                 <div class="row" style="margin: auto">
+
                     <div class="col s6">
                         <h5>会员列表</h5>
                     </div>
@@ -33,13 +35,12 @@
 
                 </div>
 
-
                 <br>
                 <div class="row">
                     <div class="col s12">
                         <c:if test="${not empty users}">
-                        <table class="bordered">
-                            <thead>
+                            <table class="bordered">
+                                <thead>
                                 <tr>
                                     <th>姓名</th>
                                     <th>电话</th>
@@ -49,9 +50,9 @@
                                         <th></th>
                                     </sec:authorize>
                                 </tr>
-                            </thead>
+                                </thead>
 
-                            <tbody>
+                                <tbody>
                                 <c:forEach items="${users}" var="user">
                                     <tr>
                                         <td>${user.name}</td>
@@ -77,8 +78,8 @@
                                         </sec:authorize>
                                     </tr>
                                 </c:forEach>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
                         </c:if>
 
                         <c:if test="${empty users}">
@@ -86,8 +87,8 @@
                         </c:if>
                     </div>
                 </div>
-			</div>
 
+            </div>
 		</div>
 	</main>
 

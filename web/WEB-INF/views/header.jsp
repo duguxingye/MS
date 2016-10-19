@@ -44,7 +44,7 @@
                 <li class="bold"><a class="collapsible-header  waves-effect waves-teal">产品管理</a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="color.html">车险</a></li>
+                            <li><a href="<c:url value='/list-product-car' />">车险</a></li>
                             <li><a href="grid.html">寿险</a></li>
                             <li><a href="helpers.html">团险</a></li>
                             <li><a href="media-css.html">卡保险</a></li>
