@@ -20,7 +20,7 @@ public interface UserService {
 
 	List<User> findAllUsers();
 
-	List<User> findByType(String type, boolean belongTo);
+	List<User> findByType(String type);
 
     List<User> findDownUsers(String leaderId);
 

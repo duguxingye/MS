@@ -49,6 +49,7 @@
           <element id="library" level="project" name="Maven: javax.servlet.jsp:javax.servlet.jsp-api:2.3.1" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
           <element id="library" level="project" name="Maven: org.json:json:20160212" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

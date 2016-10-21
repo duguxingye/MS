@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService{
 	}
 
     @Override
-    public List<User> findByType(String type, boolean belongTo) {
-        return dao.findByType(type, belongTo);
+    public List<User> findByType(String type) {
+        return dao.findByType(type);
     }
 
     public List<User> findDownUsers(String leaderId) {

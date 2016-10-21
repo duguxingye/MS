@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -117,20 +118,15 @@ public class AppController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
-        List<User> users = null;
+        List<User> users = new ArrayList<>();
         User loginUser = userService.findByJobId(getPrincipal());
         if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-            users = userService.findByType("ADMIN", false);
-//            users = userService.findAllUsers();
-//
-//            Iterator<User> it = users.iterator();
-//            while(it.hasNext()) {
-//                if(it.next().getLeaderId().equals("NONE")) {
-//                    it.remove();
-//                }
-//            }
-
+            users.addAll(userService.findAllUsers());
+            users.removeAll(userService.findByType("ADMIN"));
         } else {
+            List<User> downLevel1Users = userService.findDownUsers(loginUser.getJobId();
+            users.addAll(downLevel1Users);
+            while (users.)
             users = userService.findAllDownUsers(loginUser.getJobId());
         }
         model.addAttribute("users", users);

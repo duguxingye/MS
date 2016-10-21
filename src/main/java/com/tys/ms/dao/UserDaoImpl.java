@@ -74,13 +74,8 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
     }
 
     @Override
-    public List<User> findByType(String type, boolean belongTo) {
-        String hql;
-        if (belongTo) {
-            hql ="FROM User u left join u.userProfile p where p.type= :type";
-        } else {
-            hql ="from User u left join u.userProfile p where p.type<> :type";
-        }
+    public List<User> findByType(String type) {
+        String hql ="FROM User u left join u.userProfile p where p.type= :type";
         Query query=getSession().createQuery(hql).setParameter("type", type);         //创建查询
         List list=query.list();                          //执行查询
         List<User> users =  new ArrayList<User>();
