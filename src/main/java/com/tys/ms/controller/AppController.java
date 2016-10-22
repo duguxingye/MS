@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/")
@@ -118,29 +119,45 @@ public class AppController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
-        List<User> users = new ArrayList<>();
+//        List<User> users;
+//        List<User> allUsers = userService.findAllUsers();
+//        String loginUserJobId = getPrincipal();
+//        User loginUser = userService.findByJobId(loginUserJobId);
+//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
+//            users = allUsers.stream()
+//                    .filter(user -> !user.getLeaderId().equals("NONE"))
+//                    .collect(Collectors.toList());
+//        } else {
+//            List<User> upOneLevelUser = allUsers.stream()
+//                    .filter(user -> user.getLeaderId().equals(loginUserJobId))
+//                    .collect(Collectors.toList());
+//            List<User> upTwoLevelUser = upOneLevelUser.stream()
+//                    .filter(user -> user.getLeaderId().equals("area22"))
+//                    .collect(Collectors.toList());
+//            users  = new ArrayList<>();
+//            users.addAll(upOneLevelUser);
+//            users.addAll(upTwoLevelUser);
+//        }
+        List<User> users = null;
         User loginUser = userService.findByJobId(getPrincipal());
         if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-            users.addAll(userService.findAllUsers());
-            users.removeAll(userService.findByType("ADMIN"));
+            users = userService.findAllUsers();
+
+            Iterator<User> it = users.iterator();
+            while(it.hasNext()) {
+                if(it.next().getLeaderId().equals("NONE")) {
+                    it.remove();
+                }
+            }
+
         } else {
-            List<User> downLevel1Users = userService.findDownUsers(loginUser.getJobId();
-            users.addAll(downLevel1Users);
-            while (users.)
             users = userService.findAllDownUsers(loginUser.getJobId());
         }
+
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
         return "userList";
     }
-
-//    @RequestMapping(value = "/list", method = RequestMethod.GET)
-//    public String listAllUsers(ModelMap model) {
-//        List<User> users = userService.findAllUsers();
-//        model.addAttribute("users", users);
-//        model.addAttribute("loginUser", getPrincipal());
-//        return "userList";
-//    }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.GET)
     public String newUser(ModelMap model) {
@@ -259,6 +276,67 @@ public class AppController {
         model.addAttribute("productInsList", productInsList);
         model.addAttribute("loginUser", getPrincipal());
         return "listProductCar";
+    }
+
+    @RequestMapping(value = "/list-product-person", method = RequestMethod.GET)
+    public String listProductPerson(ModelMap model) {
+        return "listProductPerson";
+    }
+
+    @RequestMapping(value = "/list-product-team", method = RequestMethod.GET)
+    public String listProductTeam(ModelMap model) {
+        return "listProductTeam";
+    }
+
+    @RequestMapping(value = "/list-product-card", method = RequestMethod.GET)
+    public String listProductCard(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-car", method = RequestMethod.GET)
+    public String addProductCar(ModelMap model) {
+        ProductIns productIns = new ProductIns();
+        model.addAttribute("productIns", productIns);
+        model.addAttribute("car", true);
+        model.addAttribute("loginUser", getPrincipal());
+        return "addProductIns";
+    }
+
+    @RequestMapping(value = "/add-product-car", method = RequestMethod.POST)
+    public String saveProductCar(@Valid ProductIns productIns, BindingResult result,ModelMap model) {
+        productIns.setInsType("car");
+        productInsService.save(productIns);
+        return "addProductDone";
+    }
+
+    @RequestMapping(value = "/add-product-person", method = RequestMethod.GET)
+    public String addProductPerson(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-person", method = RequestMethod.POST)
+    public String saveProductPerson(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-team", method = RequestMethod.GET)
+    public String addProductTeam(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-team", method = RequestMethod.POST)
+    public String saveProductTeam(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-card", method = RequestMethod.GET)
+    public String addProductCard(ModelMap model) {
+        return "listProductCard";
+    }
+
+    @RequestMapping(value = "/add-product-card", method = RequestMethod.POST)
+    public String saveProductCard(ModelMap model) {
+        return "listProductCard";
     }
 
     @ModelAttribute("roles")
