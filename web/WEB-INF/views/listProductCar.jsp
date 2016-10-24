@@ -35,9 +35,9 @@
                                 </a>
                                 <ul>
                                     <%--<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>--%>
-                                    <%--<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>--%>
-                                    <li><a class="btn-floating green" href="<c:url value='/add-product-car' />"><i class="material-icons">add</i></a></li>
-                                    <li><a class="btn-floating blue" href="<c:url value='/export-product-car' />"><i class="material-icons">attach_file</i></a></li>
+                                    <li><a class="btn-floating tooltipped yellow darken-1" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
+                                    <li><a class="btn-floating tooltipped green" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
+                                    <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
                                 </ul>
                             </div>
 
@@ -117,6 +117,11 @@
     <script src="static/js/jquery-2.1.1.min.js"></script>
     <script src="static/js/materialize.js"></script>
     <script src="static/js/init.js"></script>
+    <script>
+        (document).ready(function(){
+            $('.tooltipped').tooltip({delay: 50});
+        });
+    </script>
 
 </body>
 </html>
