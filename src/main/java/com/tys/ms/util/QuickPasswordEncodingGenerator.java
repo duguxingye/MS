@@ -28,21 +28,25 @@ public class QuickPasswordEncodingGenerator {
      * @param args
      */
     public static void main(String[] args) {
+        String leaderId = "area01";
+        String leaderIdInSql = "\'" + leaderId +"\'";
+        String querySql = "select distinct c.job_id from ms.app_user a inner join ms.app_user b on a.job_id=b.leader_id or a.job_id=b.job_id inner join ms.app_user c on b.job_id=c.leader_id or b.job_id=c.job_id where a.job_id=" + leaderIdInSql;
+        System.out.println(querySql);
 
-//        BigDecimal a = new BigDecimal("2.00");
-//        BigDecimal b = new BigDecimal("2.00");
-//        BigDecimal c = new BigDecimal("2.00");
-//        BigDecimal d = new BigDecimal("5.00");
-
-        String a = "2.00";
-        String b = "2.00";
-        String c = "2.00";
-
-        BigDecimal d = new BigDecimal("44");
-//        String d = "5.00";
-
-        //是否不相等
-        System.out.println(add(a, b, c).compareTo(d) != 0);
+////        BigDecimal a = new BigDecimal("2.00");
+////        BigDecimal b = new BigDecimal("2.00");
+////        BigDecimal c = new BigDecimal("2.00");
+////        BigDecimal d = new BigDecimal("5.00");
+//
+//        String a = "2.00";
+//        String b = "2.00";
+//        String c = "2.00";
+//
+//        BigDecimal d = new BigDecimal("44");
+////        String d = "5.00";
+//
+//        //是否不相等
+//        System.out.println(add(a, b, c).compareTo(d) != 0);
 
 
 

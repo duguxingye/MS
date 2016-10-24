@@ -123,40 +123,43 @@ public class AppController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
-//        List<User> users;
-//        List<User> allUsers = userService.findAllUsers();
-//        String loginUserJobId = getPrincipal();
-//        User loginUser = userService.findByJobId(loginUserJobId);
-//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-//            users = allUsers.stream()
-//                    .filter(user -> !user.getLeaderId().equals("NONE"))
-//                    .collect(Collectors.toList());
-//        } else {
+        List<User> users;
+        List<User> allUsers = userService.findAllUsers();
+        String loginUserJobId = getPrincipal();
+        User loginUser = userService.findByJobId(loginUserJobId);
+        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
+            users = allUsers.stream()
+                    .filter(user -> !user.getLeaderId().equals("NONE"))
+                    .collect(Collectors.toList());
+        } else {
+            users = userService.findAllDownUsers(getPrincipal());
+//            List<User> upOneLevelUser = userService.findDownUsers(loginUserJobId);
+
 //            List<User> upOneLevelUser = allUsers.stream()
-//                    .filter(user -> user.getLeaderId().equals(loginUserJobId))
+//                    .filter(user -> user.getLeaderId().equals(getPrincipal()))
 //                    .collect(Collectors.toList());
-//            List<User> upTwoLevelUser = upOneLevelUser.stream()
-//                    .filter(user -> user.getLeaderId().equals("area22"))
+//            List<User> upTwoLevelUser = allUsers.stream()
+//                    .filter(user -> user.getLeaderId().equals(upOneLevelUser.))
 //                    .collect(Collectors.toList());
 //            users  = new ArrayList<>();
 //            users.addAll(upOneLevelUser);
 //            users.addAll(upTwoLevelUser);
-//        }
-        List<User> users = null;
-        User loginUser = userService.findByJobId(getPrincipal());
-        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-            users = userService.findAllUsers();
-
-            Iterator<User> it = users.iterator();
-            while(it.hasNext()) {
-                if(it.next().getLeaderId().equals("NONE")) {
-                    it.remove();
-                }
-            }
-
-        } else {
-            users = userService.findAllDownUsers(loginUser.getJobId());
         }
+//        List<User> users = null;
+//        User loginUser = userService.findByJobId(getPrincipal());
+//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
+//            users = userService.findAllUsers();
+//
+//            Iterator<User> it = users.iterator();
+//            while(it.hasNext()) {
+//                if(it.next().getLeaderId().equals("NONE")) {
+//                    it.remove();
+//                }
+//            }
+//
+//        } else {
+//            users = userService.findAllDownUsers(loginUser.getJobId());
+//        }
 
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
@@ -277,7 +280,13 @@ public class AppController {
     @RequestMapping(value = "/list-product-car", method = RequestMethod.GET)
     public String listProductCar(ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType("car");
-        model.addAttribute("productInsList", productInsList);
+        List<ProductIns> selfProductInsList = productInsList.stream()
+                .filter(productIns -> getPrincipal().equals(productIns.getEmployeeId()))
+                    .collect(Collectors.toList());
+        List<ProductIns> subordinateProductInsList = selfProductInsList.stream()
+                .filter(productIns -> getPrincipal().equals(productIns.getEmployeeId()))
+                .collect(Collectors.toList());
+//        model.addAttribute("productInsList", targetProductInsList);
         model.addAttribute("loginUser", getPrincipal());
         return "listProductCar";
     }

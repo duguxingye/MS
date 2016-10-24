@@ -113,24 +113,15 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
     }
 
     public List<User> findAllDownUsers(String leaderId) {
-        List<User> targetUsers = null;
-        List<User> users1 = findDownUsers(leaderId);
-        targetUsers = users1;
+        String leaderIdInSql = "\'" + leaderId +"\'";
+        String querySql = "select distinct c.job_id from ms.app_user a inner join ms.app_user b on a.job_id=b.leader_id or a.job_id=b.job_id inner join ms.app_user c on b.job_id=c.leader_id or b.job_id=c.job_id where a.job_id=" + leaderIdInSql;
+        List<String> jobIdList = (List<String>) getSession().createNativeQuery(querySql).list();
+        List<User> targetUsers = new ArrayList<>();
 
-        for (int i = 0; i < users1.size(); i++) {
-            List<User> users2 = findDownUsers(users1.get(i).getJobId());
-            for (int j = 0; j < users2.size(); j++) {
-                targetUsers.add(users2.get(j));
-            }
+        for (int i = 0; i < jobIdList.size(); i++) {
+            User users = findByJobID(jobIdList.get(i));
+            targetUsers.add(users);
         }
-
-//        for (User user1 : users1) {
-//            List<User> users2 = findDownUsers(user1.getJobId());
-//            for (User user2 : users2) {
-//                targetUsers.add(user2);
-//            }
-//        }
-
         return targetUsers;
     }
 
