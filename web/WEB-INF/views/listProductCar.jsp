@@ -23,14 +23,27 @@
 
                     <div class="col s6">
                         <h5>车险列表</h5>
-                        <h3><a href="<c:url value='/export-product-car' />">Export</a></h3>
+                        <%--<h3><a href="<c:url value='/export-product-car' />">Export</a></h3>--%>
                     </div>
 
                     <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR')">
-                        <div class="col s6">
-                            <a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='/add-product-car' />">
-                                <i class="large material-icons">add</i>
-                            </a>
+                        <div style="position: relative; height: 70px;">
+
+                            <div class="fixed-action-btn horizontal click-to-toggle">
+                                <a class="btn-floating btn-large red">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                                <ul>
+                                    <%--<li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>--%>
+                                    <%--<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>--%>
+                                    <li><a class="btn-floating green" href="<c:url value='/add-product-car' />"><i class="material-icons">add</i></a></li>
+                                    <li><a class="btn-floating blue" href="<c:url value='/export-product-car' />"><i class="material-icons">attach_file</i></a></li>
+                                </ul>
+                            </div>
+
+                            <%--<a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='/add-product-car' />">--%>
+                                <%--<i class="large material-icons">add</i>--%>
+                            <%--</a>--%>
                         </div>
                     </sec:authorize>
 
