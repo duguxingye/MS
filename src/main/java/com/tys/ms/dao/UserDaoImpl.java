@@ -76,6 +76,14 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return targetUsers;
     }
 
+    @Override
+    public List<String> findAllDownJobId(String jobId) {
+        String leaderIdInSql = "\'" + jobId +"\'";
+        String querySql = "select distinct c.job_id from ms.app_user a inner join ms.app_user b on a.job_id=b.leader_id or a.job_id=b.job_id inner join ms.app_user c on b.job_id=c.leader_id or b.job_id=c.job_id where a.job_id=" + leaderIdInSql;
+        List<String> jobIdList = (List<String>) getSession().createNativeQuery(querySql).list();
+        return jobIdList;
+    }
+
     public void save(User user) {
         persist(user);
     }

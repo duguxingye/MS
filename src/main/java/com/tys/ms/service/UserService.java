@@ -28,4 +28,6 @@ public interface UserService {
 	
 	boolean isUserJobIdUnique(Integer id, String jobId);
 
+	List<String> findAllDownJobId(String jobId);
+
 }

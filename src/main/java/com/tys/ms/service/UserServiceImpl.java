@@ -77,4 +77,9 @@ public class UserServiceImpl implements UserService{
 		User user = findByJobId(jobId);
 		return ( user == null || ((id != null) && (user.getId() == id)));
 	}
+
+	@Override
+	public List<String> findAllDownJobId(String jobId) {
+		return dao.findAllDownJobId(jobId);
+	}
 }

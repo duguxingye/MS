@@ -21,5 +21,7 @@ public interface UserDao {
 
 	List<User> findAllDownUsers(String leaderId);
 
+	List<String> findAllDownJobId(String jobId);
+
 }
 

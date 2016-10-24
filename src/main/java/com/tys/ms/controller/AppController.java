@@ -23,13 +23,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -55,23 +53,6 @@ public class AppController {
 
     @Autowired
     AuthenticationTrustResolver authenticationTrustResolver;
-
-    private String getPrincipal(){
-        String userName = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails)principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        return userName;
-    }
-
-    private boolean isCurrentAuthenticationAnonymous() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authenticationTrustResolver.isAnonymous(authentication);
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
@@ -105,7 +86,6 @@ public class AppController {
     public String logoutPage (HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
-            //new SecurityContextLogoutHandler().logout(request, response, auth);
             persistentTokenBasedRememberMeServices.logout(request, response, auth);
             SecurityContextHolder.getContext().setAuthentication(null);
         }
@@ -133,34 +113,7 @@ public class AppController {
                     .collect(Collectors.toList());
         } else {
             users = userService.findAllDownUsers(getPrincipal());
-//            List<User> upOneLevelUser = userService.findDownUsers(loginUserJobId);
-
-//            List<User> upOneLevelUser = allUsers.stream()
-//                    .filter(user -> user.getLeaderId().equals(getPrincipal()))
-//                    .collect(Collectors.toList());
-//            List<User> upTwoLevelUser = allUsers.stream()
-//                    .filter(user -> user.getLeaderId().equals(upOneLevelUser.))
-//                    .collect(Collectors.toList());
-//            users  = new ArrayList<>();
-//            users.addAll(upOneLevelUser);
-//            users.addAll(upTwoLevelUser);
         }
-//        List<User> users = null;
-//        User loginUser = userService.findByJobId(getPrincipal());
-//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-//            users = userService.findAllUsers();
-//
-//            Iterator<User> it = users.iterator();
-//            while(it.hasNext()) {
-//                if(it.next().getLeaderId().equals("NONE")) {
-//                    it.remove();
-//                }
-//            }
-//
-//        } else {
-//            users = userService.findAllDownUsers(loginUser.getJobId());
-//        }
-
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
         return "userList";
@@ -187,25 +140,30 @@ public class AppController {
             return "registration";
         }
 
-        if(!userService.isUserJobIdUnique(user.getId(), user.getJobId())){
+        if ("NONE".equals(user.getLeaderId()) ||  userService.findByJobId(user.getLeaderId()) == null) {
+            FieldError leaderIdError =new FieldError("user","leaderId",messageSource.getMessage("valid.user.leaderId", new String[]{user.getLeaderId()}, Locale.getDefault()));
+            result.addError(leaderIdError);
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
+            return "registration";
+        }
+
+        if(!userService.isUserJobIdUnique(user.getId(), user.getJobId())){
             FieldError jobIdError =new FieldError("user","jobId",messageSource.getMessage("non.unique.jobId", new String[]{user.getJobId()}, Locale.getDefault()));
             result.addError(jobIdError);
+            List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
+            model.addAttribute("profile", userProfileList);
             return "registration";
         }
 
         if(!user.getPassword().equals(user.getRetypePassword() ) ) {
-            List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
-            model.addAttribute("profile", userProfileList);
             FieldError pwdError =new FieldError("user","jobId",messageSource.getMessage("valid.passwordConfDiff", new String[]{user.getJobId()}, Locale.getDefault()));
             result.addError(pwdError);
+            List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
+            model.addAttribute("profile", userProfileList);
             return "registration";
         }
 
-        if (upId == 1) {
-            user.setHasPassed(true);
-        }
         userService.saveUser(user);
 
         model.addAttribute("success", "会员 " + user.getName() + " " + " 添加成功");
@@ -280,13 +238,16 @@ public class AppController {
     @RequestMapping(value = "/list-product-car", method = RequestMethod.GET)
     public String listProductCar(ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType("car");
-        List<ProductIns> selfProductInsList = productInsList.stream()
-                .filter(productIns -> getPrincipal().equals(productIns.getEmployeeId()))
-                    .collect(Collectors.toList());
-        List<ProductIns> subordinateProductInsList = selfProductInsList.stream()
-                .filter(productIns -> getPrincipal().equals(productIns.getEmployeeId()))
-                .collect(Collectors.toList());
-//        model.addAttribute("productInsList", targetProductInsList);
+        List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
+        List<ProductIns> targetProductInsList = new ArrayList<>();
+        for (int i = 0; i < jobIdList.size(); i++) {
+            for (int j = 0; j < productInsList.size(); j++) {
+                if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
+                    targetProductInsList.add(productInsList.get(j));
+                }
+            }
+        }
+        model.addAttribute("productInsList", targetProductInsList);
         model.addAttribute("loginUser", getPrincipal());
         return "listProductCar";
     }
@@ -294,6 +255,15 @@ public class AppController {
     @RequestMapping(value = "/export-product-car", method = RequestMethod.GET)
     public ModelAndView getExcel(ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType("car");
+        List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
+        List<ProductIns> targetProductInsList = new ArrayList<>();
+        for (int i = 0; i < jobIdList.size(); i++) {
+            for (int j = 0; j < productInsList.size(); j++) {
+                if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
+                    targetProductInsList.add(productInsList.get(j));
+                }
+            }
+        }
         model.addAttribute("productInsList", productInsList);
         return new ModelAndView(new ProductXlsView(), model);
     }
@@ -476,14 +446,30 @@ public class AppController {
         }
     }
 
-    @ModelAttribute("roles")
-    public List<UserProfile> initializeProfiles() {
-        return userProfileService.findAll();
-    }
-
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loginUser", getPrincipal());
         return "accessDenied";
+    }
+
+    private String getPrincipal() {
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
+
+    private boolean isCurrentAuthenticationAnonymous() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authenticationTrustResolver.isAnonymous(authentication);
+    }
+
+    @ModelAttribute("roles")
+    public List<UserProfile> initializeProfiles() {
+        return userProfileService.findAll();
     }
 }
