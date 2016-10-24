@@ -67,16 +67,6 @@
 
                     <div class="row">
                         <div class="input-field col s12 m6">
-                            <mvc:input placeholder="请输入险种" type="text" path="productType" id="productType" class="validate" />
-                            <label for="productType">险种</label>
-                        </div>
-                        <div class="col s12 m6">
-                            <mvc:errors path="productType" class="input-field red"/>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-field col s12 m6">
                             <mvc:input placeholder="请输入投保类型" type="text" path="insIllustration" id="insIllustration" class="validate" />
                             <label for="insIllustration">投保类型</label>
                         </div>
@@ -87,14 +77,17 @@
 
                     <c:if test="${person}">
                         <mvc:input type="hidden" value="person" path="insType" id="insType"/>
+                        <mvc:input type="hidden" value="寿险" path="productType" id="productType" />
                     </c:if>
 
                     <c:if test="${card}">
                         <mvc:input type="hidden" value="card" path="insType" id="insType"/>
+                        <mvc:input type="hidden" value="卡保险" path="productType" id="productType" />
                     </c:if>
 
                     <c:if test="${team}">
                         <mvc:input type="hidden" value="team" path="insType" id="insType"/>
+                        <mvc:input type="hidden" value="团险" path="productType" id="productType" />
                     </c:if>
 
 
