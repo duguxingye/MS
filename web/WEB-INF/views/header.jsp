@@ -45,10 +45,10 @@
                     <div class="collapsible-body">
                         <ul>
                             <li><a href="<c:url value='/list-product-car' />">车险</a></li>
-                            <li><a href="grid.html">寿险</a></li>
-                            <li><a href="helpers.html">团险</a></li>
-                            <li><a href="media-css.html">卡保险</a></li>
-                            <li><a href="sass.html">更多产品</a></li>
+                            <li><a href="<c:url value='/list-product-person' />">寿险</a></li>
+                            <li><a href="<c:url value='/list-product-team' />">团险</a></li>
+                            <li><a href="<c:url value='/list-product-card' />">卡保险</a></li>
+                            <li><a href="#">更多产品</a></li>
                         </ul>
                     </div>
                 </li>

@@ -23,11 +23,12 @@
 
                     <div class="col s6">
                         <h5>车险列表</h5>
+                        <h3><a href="<c:url value='/export-product-car' />">Export</a></h3>
                     </div>
 
                     <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR')">
                         <div class="col s6">
-                            <a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='#' />">
+                            <a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='/add-product-car' />">
                                 <i class="large material-icons">add</i>
                             </a>
                         </div>
@@ -57,7 +58,7 @@
                                     <tr>
                                         <td>${productIns.id}</td>
                                         <td>${productIns.employee}</td>
-                                        <td>${productIns.employeeId}</td>
+                                        <td>${productIns.insMoney}</td>
                                         <%--<sec:authorize access="hasRole('ADMIN')">--%>
                                             <%--<td>--%>
                                                 <%--<a href="<c:url value='/edit-user-${user.jobId}' />" class="waves-effect waves-light btn">修改</a>--%>

@@ -124,6 +124,13 @@
             <version>20160212</version>
         </dependency>
 
+        <!-- Excel -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.6</version>
+        </dependency>
+
         <!--Guava -->
         <dependency>
             <groupId>com.google.guava</groupId>

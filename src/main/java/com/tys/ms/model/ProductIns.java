@@ -2,10 +2,11 @@ package com.tys.ms.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import java.io.Serializable;
 
 @Entity
-@Table(name="product_ins")
+@Table(name="PRODUCT_INS")
 public class ProductIns implements Serializable{
 
     private static final long serialVersionUID = -4666041285389731203L;
@@ -48,22 +49,29 @@ public class ProductIns implements Serializable{
     @Column(name="ins_time", nullable=false)
     private String insTime;
 
-    @NotEmpty
-    @Column(name="car_type", nullable=false)
+    @Column(name="car_type")
     private String carType;
 
+    @DecimalMin("0")
     @Column(name="car_business_money")
     private String carBusinessMoney;
 
+    @DecimalMin("0")
     @Column(name="car_mandatory_money")
     private String carMandatoryMoney;
 
+    @DecimalMin("0")
     @Column(name="car_tax_money")
     private String carTaxMoney;
 
     @NotEmpty
+    @DecimalMin("0")
     @Column(name="ins_money", nullable=false)
     private String insMoney;
+
+    @NotEmpty
+    @Column(name = "product_type", nullable=false)
+    private String productType;
 
     public Integer getId() {
         return id;
@@ -183,5 +191,13 @@ public class ProductIns implements Serializable{
 
     public void setInsMoney(String insMoney) {
         this.insMoney = insMoney;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }

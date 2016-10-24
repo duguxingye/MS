@@ -74,28 +74,27 @@ INSERT INTO `ms`.`app_user_user_profile` (`user_id`, `user_profile_id`) VALUES (
 CREATE TABLE `ms`.`product_ins` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `company` VARCHAR(30) NOT NULL,
-  `name` VARCHAR(30) NOT NULL,
   `employee` VARCHAR(30) NOT NULL,
   `employee_id` VARCHAR(30) BINARY NOT NULL,
   `ins_company` VARCHAR(30) NOT NULL,
   `ins_type` VARCHAR(30) NOT NULL,
   `ins_illustration` VARCHAR(30) NOT NULL,
+  `product_type` VARCHAR(30) NOT NULL,
   `ins_person` VARCHAR(30) NULL,
   `car_number` VARCHAR(30) NULL,
   `ins_time` VARCHAR(30) NOT NULL,
   `car_type` VARCHAR(30) NULL,
-  `car_business_money` VARCHAR(30) NULL,
-  `car_mandatory_money` VARCHAR(30) NULL,
-  `car_tax_money` VARCHAR(30) NULL,
+  `car_business_money` DECIMAL(10,2) NULL,
+  `car_mandatory_money` DECIMAL(10,2) NULL,
+  `car_tax_money` DECIMAL(10,2) NULL,
   `ins_money` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `employee_id`
   FOREIGN KEY (employee_id)
   REFERENCES `ms`.`app_user`(job_id)
-    ON DELETE  RESTRICT
+    ON DELETE  CASCADE
     ON UPDATE CASCADE);
 
-alter table ms.product_ins drop column name;
-alter table ms.product_ins change ins_illstration ins_illustration varchar(30);
-alter table ms.product_ins change ins_persion ins_person varchar(30);
-alter table ms.product_ins add column product_type varchar(30) not null;
+# alter table ms.product_ins change ins_illstration ins_illustration varchar(30);
+# alter table ms.product_ins change ins_persion ins_person varchar(30);
+# alter table ms.product_ins add column product_type varchar(30) not null;

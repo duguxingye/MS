@@ -6430,10 +6430,10 @@ DatePicker.defaults = (function( prefix ) {
         // Today and clear
         today: '今天',
         clear: '清除',
-        close: '关闭',
+        close: '确定',
 
         // The format to show on the `input` element
-        format: 'yyyy/mmmm/d',
+        format: 'yyyy/mm/dd',
 
         // Classes
         klass: {

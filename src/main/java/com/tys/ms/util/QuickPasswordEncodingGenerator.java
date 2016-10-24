@@ -2,6 +2,7 @@ package com.tys.ms.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +15,34 @@ public class QuickPasswordEncodingGenerator {
         }
     }
 
+    public static BigDecimal add(String num1, String num2, String num3) {
+        BigDecimal bd1 = new BigDecimal(num1);
+        BigDecimal bd2 = new BigDecimal(num2);
+        BigDecimal bd3 = new BigDecimal(num3);
+        return bd1.add(bd2).add(bd3);
+    }
+
 
 
     /**
      * @param args
      */
     public static void main(String[] args) {
+
+//        BigDecimal a = new BigDecimal("2.00");
+//        BigDecimal b = new BigDecimal("2.00");
+//        BigDecimal c = new BigDecimal("2.00");
+//        BigDecimal d = new BigDecimal("5.00");
+
+        String a = "2.00";
+        String b = "2.00";
+        String c = "2.00";
+
+        BigDecimal d = new BigDecimal("44");
+//        String d = "5.00";
+
+        //是否不相等
+        System.out.println(add(a, b, c).compareTo(d) != 0);
 
 
 

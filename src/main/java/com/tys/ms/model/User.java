@@ -53,6 +53,22 @@ public class User implements Serializable {
     @Column(name="HAS_PASSED", nullable=false)
     private boolean hasPassed = true;
 
+    public User(String jobId, String oldPassword, String password, String retypePassword, String name, String phone, String leaderId, UserProfile userProfile, boolean hasLocked, boolean hasPassed) {
+        this.jobId = jobId;
+        this.oldPassword = oldPassword;
+        this.password = password;
+        this.retypePassword = retypePassword;
+        this.name = name;
+        this.phone = phone;
+        this.leaderId = leaderId;
+        this.userProfile = userProfile;
+        this.hasLocked = hasLocked;
+        this.hasPassed = hasPassed;
+    }
+
+    public User() {
+    }
+
     public Integer getId() {
         return id;
     }

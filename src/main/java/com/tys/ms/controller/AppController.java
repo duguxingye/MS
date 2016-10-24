@@ -2,6 +2,7 @@ package com.tys.ms.controller;
 
 import com.geetest.sdk.java.GeetestLib;
 import com.geetest.sdk.java.web.demo.GeetestConfig;
+import com.tys.ms.converter.ProductXlsView;
 import com.tys.ms.model.ProductIns;
 import com.tys.ms.model.User;
 import com.tys.ms.model.UserProfile;
@@ -21,9 +22,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -278,18 +282,34 @@ public class AppController {
         return "listProductCar";
     }
 
+    @RequestMapping(value = "/export-product-car", method = RequestMethod.GET)
+    public ModelAndView getExcel(ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType("car");
+        model.addAttribute("productInsList", productInsList);
+        return new ModelAndView(new ProductXlsView(), model);
+    }
+
     @RequestMapping(value = "/list-product-person", method = RequestMethod.GET)
     public String listProductPerson(ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType("person");
+        model.addAttribute("productInsList", productInsList);
+        model.addAttribute("loginUser", getPrincipal());
         return "listProductPerson";
     }
 
     @RequestMapping(value = "/list-product-team", method = RequestMethod.GET)
     public String listProductTeam(ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType("team");
+        model.addAttribute("productInsList", productInsList);
+        model.addAttribute("loginUser", getPrincipal());
         return "listProductTeam";
     }
 
     @RequestMapping(value = "/list-product-card", method = RequestMethod.GET)
     public String listProductCard(ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType("card");
+        model.addAttribute("productInsList", productInsList);
+        model.addAttribute("loginUser", getPrincipal());
         return "listProductCard";
     }
 
@@ -303,40 +323,148 @@ public class AppController {
     }
 
     @RequestMapping(value = "/add-product-car", method = RequestMethod.POST)
-    public String saveProductCar(@Valid ProductIns productIns, BindingResult result,ModelMap model) {
-        productIns.setInsType("car");
-        productInsService.save(productIns);
-        return "addProductDone";
+    public String saveProductCar(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("car", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
+            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeIdError);
+            model.addAttribute("car", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
+            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeError);
+            model.addAttribute("car", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
+            // 0 相等，1 不相等
+            FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
+            result.addError(insMoneyError);
+            model.addAttribute("car", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else {
+            productInsService.save(productIns);
+            model.addAttribute("car", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
+        }
+    }
+
+    public static BigDecimal add(String num1, String num2, String num3) {
+        BigDecimal bd1 = new BigDecimal(num1);
+        BigDecimal bd2 = new BigDecimal(num2);
+        BigDecimal bd3 = new BigDecimal(num3);
+        return bd1.add(bd2).add(bd3);
     }
 
     @RequestMapping(value = "/add-product-person", method = RequestMethod.GET)
     public String addProductPerson(ModelMap model) {
-        return "listProductCard";
+        ProductIns productIns = new ProductIns();
+        model.addAttribute("productIns", productIns);
+        model.addAttribute("person", true);
+        model.addAttribute("loginUser", getPrincipal());
+        return "addProductIns";
     }
 
     @RequestMapping(value = "/add-product-person", method = RequestMethod.POST)
-    public String saveProductPerson(ModelMap model) {
-        return "listProductCard";
+    public String saveProductPerson(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("person", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
+            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeIdError);
+            model.addAttribute("person", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
+            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeError);
+            model.addAttribute("person", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else {
+            productInsService.save(productIns);
+            model.addAttribute("person", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
+        }
     }
 
     @RequestMapping(value = "/add-product-team", method = RequestMethod.GET)
     public String addProductTeam(ModelMap model) {
-        return "listProductCard";
+        ProductIns productIns = new ProductIns();
+        model.addAttribute("productIns", productIns);
+        model.addAttribute("team", true);
+        model.addAttribute("loginUser", getPrincipal());
+        return "addProductIns";
     }
 
     @RequestMapping(value = "/add-product-team", method = RequestMethod.POST)
-    public String saveProductTeam(ModelMap model) {
-        return "listProductCard";
+    public String saveProductTeam(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("team", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
+            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeIdError);
+            model.addAttribute("team", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
+            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeError);
+            model.addAttribute("team", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else {
+            productInsService.save(productIns);
+            model.addAttribute("team", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
+        }
     }
 
     @RequestMapping(value = "/add-product-card", method = RequestMethod.GET)
     public String addProductCard(ModelMap model) {
-        return "listProductCard";
+        ProductIns productIns = new ProductIns();
+        model.addAttribute("productIns", productIns);
+        model.addAttribute("card", true);
+        model.addAttribute("loginUser", getPrincipal());
+        return "addProductIns";
     }
 
     @RequestMapping(value = "/add-product-card", method = RequestMethod.POST)
-    public String saveProductCard(ModelMap model) {
-        return "listProductCard";
+    public String saveProductCard(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("card", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
+            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeIdError);
+            model.addAttribute("card", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
+            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeError);
+            model.addAttribute("card", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductIns";
+        } else {
+            productInsService.save(productIns);
+            model.addAttribute("card", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
+        }
     }
 
     @ModelAttribute("roles")
