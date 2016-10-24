@@ -95,6 +95,31 @@ CREATE TABLE `ms`.`product_ins` (
     ON DELETE  CASCADE
     ON UPDATE CASCADE);
 
+select distinct c.job_id
+from ms.app_user a inner join ms.app_user b on a.job_id=b.leader_id or a.job_id=b.job_id
+  inner join ms.app_user c on b.job_id=c.leader_id or b.job_id=c.job_id
+where a.job_id='area01';
+
+SELECT
+  u.job_id
+FROM
+  ms.app_user AS u
+  JOIN ms.app_user_user_profile AS up
+    ON (u.id = up.user_id)
+WHERE
+  up.user_profile_id = '1';
+
+SELECT
+  u.job_id
+FROM
+  ms.app_user AS u
+  JOIN ms.app_user_user_profile AS up
+    ON (u.id = up.user_id)
+  JOIN ms.user_profile AS p
+    ON (up.user_profile_id = p.id)
+WHERE
+  p.type != 'ADMIN';
+
 # alter table ms.product_ins change ins_illstration ins_illustration varchar(30);
 # alter table ms.product_ins change ins_persion ins_person varchar(30);
 # alter table ms.product_ins add column product_type varchar(30) not null;
