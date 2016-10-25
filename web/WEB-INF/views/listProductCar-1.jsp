@@ -16,7 +16,7 @@
     <%@include file="header.jsp"%>
 
     <main>
-        <div class="">
+        <div class="container">
             <div class="section">
 
                 <div class="row" style="margin: auto">
@@ -79,7 +79,7 @@
 
                                 <tbody>
 
-                                <%--<tr>--%>
+                                <%--<tr style="background-color: #00acc1">--%>
                                     <%--<th>序号</th>--%>
                                     <%--<th>承保公司地市</th>--%>
                                     <%--<th>产险销售人员姓名</th>--%>

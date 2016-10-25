@@ -238,17 +238,24 @@ public class AppController {
     @RequestMapping(value = "/list-product-car", method = RequestMethod.GET)
     public String listProductCar(ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType("car");
-        List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
         List<ProductIns> targetProductInsList = new ArrayList<>();
-        for (int i = 0; i < jobIdList.size(); i++) {
-            for (int j = 0; j < productInsList.size(); j++) {
-                if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
-                    targetProductInsList.add(productInsList.get(j));
+        String loginUserJobId = getPrincipal();
+        User loginUser = userService.findByJobId(loginUserJobId);
+        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
+            targetProductInsList.addAll(productInsList);
+        } else {
+            List<String> jobIdList = userService.findAllDownJobId(loginUserJobId);
+            for (int i = 0; i < jobIdList.size(); i++) {
+                for (int j = 0; j < productInsList.size(); j++) {
+                    if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
+                        targetProductInsList.add(productInsList.get(j));
+                    }
                 }
             }
         }
+
         model.addAttribute("productInsList", targetProductInsList);
-        model.addAttribute("loginUser", getPrincipal());
+        model.addAttribute("loginUser", loginUserJobId);
         return "listProductCar";
     }
 
@@ -264,7 +271,7 @@ public class AppController {
                 }
             }
         }
-        model.addAttribute("productInsList", productInsList);
+        model.addAttribute("productInsList", targetProductInsList);
         return new ModelAndView(new ProductXlsView(), model);
     }
 
