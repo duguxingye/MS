@@ -27,7 +27,7 @@
 
                     <sec:authorize access="hasRole('ADMIN') or hasRole('AREA') or hasRole('GROUP')">
                         <div class="col s6">
-                            <a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='/addUser' />">
+                            <a class="btn-floating btn-large red right" href="<c:url value='/addUser' />">
                                 <i class="large material-icons">add</i>
                             </a>
                         </div>
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col s12">
                         <c:if test="${not empty users}">
-                            <table class="bordered">
+                            <table class="responsive-table striped bordered">
                                 <thead>
                                 <tr>
                                     <th>姓名</th>

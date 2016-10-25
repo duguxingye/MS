@@ -31,7 +31,7 @@
                                 <label for="jobId">工号</label>
                             </div>
                             <div class="col s12 m6">
-                                <form:errors path="jobId" class="input-field red"/>
+                                <form:errors path="jobId" class="input-field red white-text"/>
                             </div>
                         </div>
 
