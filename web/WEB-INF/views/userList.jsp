@@ -16,7 +16,7 @@
 	<%@include file="header.jsp"%>
 
 	<main>
-		<div class="container">
+		<div class="">
 			<div class="section">
 
                 <div class="row" style="margin: auto">
