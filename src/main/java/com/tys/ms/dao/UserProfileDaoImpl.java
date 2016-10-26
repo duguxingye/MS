@@ -16,6 +16,7 @@ public class UserProfileDaoImpl extends AbstractDao<Integer, UserProfile> implem
 		return getByKey(id);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserProfile> findDown(int upId) {
         Criteria criteria = createEntityCriteria();

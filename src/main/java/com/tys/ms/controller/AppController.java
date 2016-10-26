@@ -3,6 +3,7 @@ package com.tys.ms.controller;
 import com.geetest.sdk.java.GeetestLib;
 import com.geetest.sdk.java.web.demo.GeetestConfig;
 import com.tys.ms.converter.ProductXlsView;
+import com.tys.ms.converter.ProductXlsxView;
 import com.tys.ms.model.ProductIns;
 import com.tys.ms.model.User;
 import com.tys.ms.model.UserProfile;
@@ -272,7 +273,8 @@ public class AppController {
             }
         }
         model.addAttribute("productInsList", targetProductInsList);
-        return new ModelAndView(new ProductXlsView(), model);
+//        return new ModelAndView(new ProductXlsView(), model);
+        return new ModelAndView(new ProductXlsxView(), model);
     }
 
     @RequestMapping(value = "/list-product-person", method = RequestMethod.GET)

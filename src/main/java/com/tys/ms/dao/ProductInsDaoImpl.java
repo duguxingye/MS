@@ -18,7 +18,7 @@ public class ProductInsDaoImpl extends AbstractDao<Integer, ProductIns> implemen
     @Override
     public ProductIns findById(int id) {
         ProductIns productIns = getByKey(id);
-        return null;
+        return productIns;
     }
 
     @Override
@@ -43,6 +43,7 @@ public class ProductInsDaoImpl extends AbstractDao<Integer, ProductIns> implemen
         delete(productIns);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<ProductIns> findAllProductIns() {
         Criteria criteria = createEntityCriteria().addOrder(Order.asc("id"));
@@ -51,6 +52,7 @@ public class ProductInsDaoImpl extends AbstractDao<Integer, ProductIns> implemen
         return productInsList;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<ProductIns> findByType(String insType) {
         Criteria criteria = createEntityCriteria();

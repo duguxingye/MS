@@ -43,6 +43,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return targetUsers;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<User> findByType(String type) {
         String typeInSql = "\'" + type +"\'";
@@ -56,6 +57,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return targetUsers;
     }
 
+    @SuppressWarnings("unchecked")
     public List<User> findDownUsers(String leaderId) {
         logger.info("leaderId : {}", leaderId);
         Criteria criteria = createEntityCriteria().add(Restrictions.eq("leaderId", leaderId));
@@ -64,6 +66,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return targetUsers;
     }
 
+    @SuppressWarnings("unchecked")
     public List<User> findAllDownUsers(String leaderId) {
         String leaderIdInSql = "\'" + leaderId +"\'";
         String querySql = "select distinct c.job_id from ms.app_user a inner join ms.app_user b on a.job_id=b.leader_id or a.job_id=b.job_id inner join ms.app_user c on b.job_id=c.leader_id or b.job_id=c.job_id where a.job_id=" + leaderIdInSql;
@@ -76,6 +79,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return targetUsers;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> findAllDownJobId(String jobId) {
         String leaderIdInSql = "\'" + jobId +"\'";
