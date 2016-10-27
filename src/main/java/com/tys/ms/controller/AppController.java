@@ -509,7 +509,7 @@ public class AppController {
 
         if (result.hasErrors()) {
             System.out.println("validation errors");
-            return "singleFileUploader";
+            return "upload";
         } else {
             System.out.println("Fetching file");
             MultipartFile multipartFile = fileBucket.getFile();
@@ -520,7 +520,7 @@ public class AppController {
             } else if (multipartFile.getOriginalFilename().endsWith("xlsx")) {
                 workbook = new XSSFWorkbook(byteArrayInputStream);
             } else {
-                throw new IllegalArgumentException("Received file does not have a standard excel extension.");
+                return "upload";
             }
 
             Sheet sheet = null;
@@ -550,7 +550,9 @@ public class AppController {
             workbook.close();
 
             for (int j = 0; j < list.size(); j++) {
-                System.out.println(list.get(j));
+                for (int k = 0; k < list.get(j).size(); k++) {
+                    ProductIns productIns = new ProductIns();
+                }
             }
 
 
