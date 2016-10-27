@@ -2,14 +2,20 @@ package com.tys.ms.controller;
 
 import com.geetest.sdk.java.GeetestLib;
 import com.geetest.sdk.java.web.demo.GeetestConfig;
-import com.tys.ms.converter.ProductXlsView;
-import com.tys.ms.converter.ProductXlsxView;
+import com.tys.ms.dao.FileBucket;
+import com.tys.ms.view.ProductXlsxView;
 import com.tys.ms.model.ProductIns;
 import com.tys.ms.model.User;
 import com.tys.ms.model.UserProfile;
 import com.tys.ms.service.ProductInsService;
 import com.tys.ms.service.UserProfileService;
 import com.tys.ms.service.UserService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -20,14 +26,21 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -481,4 +494,106 @@ public class AppController {
     public List<UserProfile> initializeProfiles() {
         return userProfileService.findAll();
     }
+
+    @RequestMapping(value="/singleUpload", method = RequestMethod.GET)
+    public String getSingleUploadPage(ModelMap model) {
+        FileBucket fileModel = new FileBucket();
+        model.addAttribute("fileBucket", fileModel);
+        return "upload";
+    }
+
+//    private static String UPLOAD_LOCATION="C:/mytemp/";
+
+    @RequestMapping(value="/singleUpload", method = RequestMethod.POST)
+    public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
+
+        if (result.hasErrors()) {
+            System.out.println("validation errors");
+            return "singleFileUploader";
+        } else {
+            System.out.println("Fetching file");
+            MultipartFile multipartFile = fileBucket.getFile();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(multipartFile.getBytes());
+            Workbook workbook;
+            if (multipartFile.getOriginalFilename().endsWith("xls")) {
+                workbook = new HSSFWorkbook(byteArrayInputStream);
+            } else if (multipartFile.getOriginalFilename().endsWith("xlsx")) {
+                workbook = new XSSFWorkbook(byteArrayInputStream);
+            } else {
+                throw new IllegalArgumentException("Received file does not have a standard excel extension.");
+            }
+
+            Sheet sheet = null;
+            Row row = null;
+            Cell cell = null;
+
+            List<List<Object>> list = new ArrayList<List<Object>>();
+            //遍历Excel中所有的sheet
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                sheet = workbook.getSheetAt(i);
+                if(sheet==null){continue;}
+
+                //遍历当前sheet中的所有行
+                for (int j = sheet.getFirstRowNum(); j < sheet.getLastRowNum(); j++) {
+                    row = sheet.getRow(j);
+                    if(row==null||row.getFirstCellNum()==j){continue;}
+
+                    //遍历所有的列
+                    List<Object> li = new ArrayList<Object>();
+                    for (int y = row.getFirstCellNum() + 1 ; y < row.getLastCellNum(); y++) {
+                        cell = row.getCell(y);
+                        li.add(getCellValue(cell));
+                    }
+                    list.add(li);
+                }
+            }
+            workbook.close();
+
+            for (int j = 0; j < list.size(); j++) {
+                System.out.println(list.get(j));
+            }
+
+
+
+            //Now do something with file...
+            FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File("C:/mytemp/" + fileBucket.getFile().getOriginalFilename()));
+
+            String fileName = multipartFile.getOriginalFilename();
+            model.addAttribute("fileName", fileName);
+            return "success";
+        }
+    }
+
+    public  Object getCellValue(Cell cell){
+        Object value = null;
+        DecimalFormat df = new DecimalFormat("0");  //格式化number String字符
+        SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");  //日期格式化
+        DecimalFormat df2 = new DecimalFormat("0.00");  //格式化数字
+
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+                value = cell.getRichStringCellValue().getString();
+                break;
+            case Cell.CELL_TYPE_NUMERIC:
+                if("General".equals(cell.getCellStyle().getDataFormatString())){
+                    value = df.format(cell.getNumericCellValue());
+                }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
+                    value = sdf.format(cell.getDateCellValue());
+                }else{
+                    value = df2.format(cell.getNumericCellValue());
+                }
+                break;
+            case Cell.CELL_TYPE_BOOLEAN:
+                value = cell.getBooleanCellValue();
+                break;
+            case Cell.CELL_TYPE_BLANK:
+                value = "";
+                break;
+            default:
+                break;
+        }
+        return value;
+    }
+
+
 }

@@ -53,6 +53,9 @@
     </head>
 
     <main>
+
+        <a href="/singleUpload">fgfdhdfhdfh</a>
+
         <div id="index-banner" class="parallax-container valign-wrapper">
             <div class="section no-pad-bot">
                 <div class="container">

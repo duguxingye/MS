@@ -1,25 +1,25 @@
-package com.tys.ms.converter;
-
+package com.tys.ms.view;
 
 import com.tys.ms.model.ProductIns;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.web.servlet.view.document.AbstractXlsxView;
+import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Administrator on 2016/10/26.
- */
-public class ProductXlsxView extends AbstractXlsxView {
+// extends AbstractXlsView
+public class ProductXlsView extends AbstractXlsView {
     @Override
     protected void buildExcelDocument(Map<String, Object> map, Workbook workbook, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+
         // change the file name
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"NewProduct.xlsx\"");
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"Product.xls\"");
 
         @SuppressWarnings("unchecked")
         List<ProductIns> productInsList = (List<ProductIns>) map.get("productInsList");
@@ -63,5 +63,6 @@ public class ProductXlsxView extends AbstractXlsxView {
             productInsRow.createCell(12).setCellValue(productIns.getCarTaxMoney());
             productInsRow.createCell(13).setCellValue(productIns.getInsMoney());
         }
+
     }
 }
