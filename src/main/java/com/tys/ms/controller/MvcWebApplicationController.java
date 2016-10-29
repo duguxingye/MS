@@ -73,7 +73,7 @@ public class MvcWebApplicationController {
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
         } else {
-            return "redirect:/info";
+            return "redirect:/info-user";
         }
     }
 
@@ -106,16 +106,16 @@ public class MvcWebApplicationController {
         return "redirect:/login?logout";
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/info-user", method = RequestMethod.GET)
     public String userInfo(ModelMap model) {
         User users = userService.findByJobId(getPrincipal());
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
         model.addAttribute("loginUserType", users.getUserProfile());
-        return "userInfo";
+        return "infoUser";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list-user", method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
         List<User> users;
         List<User> allUsers = userService.findAllUsers();
@@ -130,10 +130,10 @@ public class MvcWebApplicationController {
         }
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
-        return "userList";
+        return "istUser";
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/add-user", method = RequestMethod.GET)
     public String newUser(ModelMap model) {
         User user = new User();
         int upId = userService.findByJobId(getPrincipal()).getUserProfile().getId();
@@ -142,16 +142,16 @@ public class MvcWebApplicationController {
         model.addAttribute("edit", false);
         model.addAttribute("profile", userProfileList);
         model.addAttribute("loginUser", getPrincipal());
-        return "registration";
+        return "addUser";
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-user", method = RequestMethod.POST)
     public String saveUser(@Valid User user, BindingResult result, ModelMap model) {
         int upId = userService.findByJobId(getPrincipal()).getUserProfile().getId();
         if (result.hasErrors()) {
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
-            return "registration";
+            return "addUser";
         }
 
         if ("NONE".equals(user.getLeaderId()) ||  userService.findByJobId(user.getLeaderId()) == null) {
@@ -159,7 +159,7 @@ public class MvcWebApplicationController {
             result.addError(leaderIdError);
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
-            return "registration";
+            return "addUser";
         }
 
         if(!userService.isUserJobIdUnique(user.getId(), user.getJobId())){
@@ -167,7 +167,7 @@ public class MvcWebApplicationController {
             result.addError(jobIdError);
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
-            return "registration";
+            return "addUser";
         }
 
         if(!user.getPassword().equals(user.getRetypePassword() ) ) {
@@ -175,14 +175,14 @@ public class MvcWebApplicationController {
             result.addError(pwdError);
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
-            return "registration";
+            return "addUser";
         }
 
         userService.saveUser(user);
 
         model.addAttribute("success", "会员 " + user.getName() + " " + " 添加成功");
         model.addAttribute("loginUser", getPrincipal());
-        return "registrationDone";
+        return "addUserDone";
     }
 
     @RequestMapping(value = "/edit-user-{jobId}", method = RequestMethod.GET)
@@ -194,7 +194,7 @@ public class MvcWebApplicationController {
         List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
         model.addAttribute("profile", userProfileList);
         model.addAttribute("loginUser", getPrincipal());
-        return "registration";
+        return "addUser";
     }
 
     @RequestMapping(value = { "/edit-user-{jobId}" }, method = RequestMethod.POST)
@@ -204,42 +204,42 @@ public class MvcWebApplicationController {
             int upId = userService.findByJobId(jobId).getUserProfile().getId();
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
-            return "registration";
+            return "addUser";
         }
 
         userService.updateUser(user);
 
         model.addAttribute("success", "User " + user.getName()  + " updated successfully");
         model.addAttribute("loginUser", getPrincipal());
-        return "registrationDone";
+        return "addUserDone";
     }
 
-    @RequestMapping(value = "/change-pwd-{jobId}", method = RequestMethod.GET)
-    public String changePwd(ModelMap model, @PathVariable String jobId) {
+    @RequestMapping(value = "/reset-pwd-{jobId}", method = RequestMethod.GET)
+    public String resetPwd(ModelMap model, @PathVariable String jobId) {
         User user = userService.findByJobId(jobId);
         model.addAttribute("user", user);
-        return "cp";
+        return "resetPwd";
     }
 
-    @RequestMapping(value = "/change-pwd-{jobId}", method = RequestMethod.POST)
-    public String changePwd(User user, BindingResult result, ModelMap model, @PathVariable String jobId) {
+    @RequestMapping(value = "/reset-pwd-{jobId}", method = RequestMethod.POST)
+    public String resetPwd(User user, BindingResult result, ModelMap model, @PathVariable String jobId) {
         User user2 = userService.findByJobId(jobId);
         if (!BCrypt.checkpw(user.getOldPassword(), user2.getPassword())) {
             FieldError passwordError =new FieldError("user","password",messageSource.getMessage("valid.oldPassword", new String[]{user.getPassword()}, Locale.getDefault()));
             result.addError(passwordError);
-            return "cp";
+            return "resetPwd";
         } else if(!user.getPassword().equals(user.getRetypePassword())) {
             System.out.println(user.getPassword());
             System.out.println(user.getRetypePassword());
             FieldError passwordError =new FieldError("user","password",messageSource.getMessage("valid.passwordConfDiff", new String[]{user.getPassword()}, Locale.getDefault()));
             result.addError(passwordError);
-            return "cp";
+            return "resetPwd";
         } else {
             user2.setPassword(String.valueOf(user.getPassword()));
             userService.updateUser(user2);
             model.addAttribute("success", "User " + user.getName()  + " updated successfully");
             model.addAttribute("loginUser", getPrincipal());
-            return "cpDone";
+            return "resetPwdDone";
         }
     }
 
@@ -468,7 +468,7 @@ public class MvcWebApplicationController {
         }
     }
 
-    @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
+    @RequestMapping(value = "/AccessDenied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loginUser", getPrincipal());
         return "accessDenied";

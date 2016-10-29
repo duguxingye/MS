@@ -1,22 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html  lang="zh">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-	<title>权限问题</title>
-	<link rel="stylesheet" href="<c:url value='/static/css/material-icons.css' />" media="screen,projection">
-	<link rel="stylesheet" href="<c:url value='/static/css/ms-materialize.css' />" media="screen,projection" />
+	<title>权限有误</title>
+	<link rel="stylesheet" href="<c:url value='/static/css/materialize.css' />" media="screen,projection" />
 	<link rel="stylesheet"  href="<c:url value='/static/css/style.css' />" media="screen,projection" />
 </head>
 </head>
 <body>
-    <%@include file="header.jsp"%>
-
     <main>
         <div class="container">
             <div class="section">
@@ -24,7 +19,7 @@
                 <div class="row" style="padding-top: 15%;">
                     <div class="card" style="margin: 0 auto;max-width: 500px;">
                         <div class="card-image">
-                            <img src="static/image/index/done.png">
+                            <img src="static/image/index/error.jpg">
                             <span class="card-title">权限不够</span>
                         </div>
                         <div class="card-content">
@@ -36,8 +31,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </main>
 

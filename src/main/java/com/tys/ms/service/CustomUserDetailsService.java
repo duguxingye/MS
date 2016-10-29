@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
+
     static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     @Autowired
@@ -34,20 +35,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         if (user.isHasLocked()) {
             logger.info("User HasLocked");
-            throw new UsernameNotFoundException("Username not found");
+            throw new UsernameNotFoundException("User HasLocked");
         }
-        if (!user.isHasPassed()) {
-            logger.info("User HasLocked");
-            throw new UsernameNotFoundException("Username not found");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getJobId(), user.getPassword(),
-                true, true, true, true, getGrantedAuthorities(user));
+        return new org.springframework.security.core.userdetails.User(user.getJobId(), user.getPassword(), true, true, true, true, getGrantedAuthorities(user));
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
         logger.info("UserProfile : {}", user.getUserProfile());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserProfile().getType() ) );
         logger.info("authorities : {}", authorities);
         return authorities;

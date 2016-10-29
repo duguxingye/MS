@@ -1,7 +1,7 @@
 package com.tys.ms.configuration;
 
-import com.tys.ms.security.AppAuthenticationFailureHandler;
-import com.tys.ms.security.AppAuthenticationSuccessHandler;
+import com.tys.ms.security.SecurityWebApplicationAuthenticationFailureHandler;
+import com.tys.ms.security.SecurityWebApplicationAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +28,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     @Qualifier("customUserDetailsService")
     UserDetailsService userDetailsService;
@@ -50,32 +51,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http.addFilterBefore(filter,CsrfFilter.class);
 
-        http.authorizeRequests()
-                .antMatchers("/", "/info").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .antMatchers("/", "/change-pwd-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .antMatchers("/", "/list-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .antMatchers("/", "/add-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .antMatchers("/", "/export-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .antMatchers("/", "/list").access("hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN') or hasRole('ADMIN')")
-                .antMatchers("/addUser/**", "/delete-user-*", "/edit-user-*").access("hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
-                .and().formLogin().loginPage("/login")
-                .loginProcessingUrl("/login").usernameParameter("jobId").passwordParameter("password")
-                .successHandler(authSuccessHandler())
-                .failureHandler(authFailureHandler())
-//                .defaultSuccessUrl("/info", false)
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .and().rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
-                .tokenValiditySeconds(3600)
-                .and().csrf()
-                .and().exceptionHandling().accessDeniedPage("/Access_Denied")
-                .and().sessionManagement()
-                .sessionFixation().newSession()
-                .maximumSessions(1).maxSessionsPreventsLogin(true)
-                .sessionRegistry(sessionRegistry());
+        http
+                .authorizeRequests()
+                    .antMatchers("/", "/info-user").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
+                    .antMatchers("/", "/list-user").access("hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN') or hasRole('ADMIN')")
+                    .antMatchers("/", "/add-user").access("hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
+                    .antMatchers("/",  "/edit-user-*", "/delete-user-*").access("hasRole('ADMIN')")
+                    .antMatchers("/", "/reset-pwd-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
+                    .antMatchers("/", "/list-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
+                    .antMatchers("/", "/add-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA')")
+                    .antMatchers("/", "/export-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA') or hasRole('ADMIN')")
+                    .antMatchers("/", "/upload-product-*").access("hasRole('REGULAR') or hasRole('GROUP') or hasRole('AREA')")
+                   .and().
+                formLogin().loginPage("/login")
+                    .loginProcessingUrl("/login").usernameParameter("jobId").passwordParameter("password")
+                    .successHandler(authSuccessHandler())
+                    .failureHandler(authFailureHandler())
+                    .and().
+                logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .and().
+                rememberMe()
+                    .rememberMeParameter("remember-me").tokenRepository(tokenRepository)
+                    .tokenValiditySeconds(3600)
+                    .and().
+                csrf()
+                    .and().
+                exceptionHandling()
+                    .accessDeniedPage("/AccessDenied")
+                    .and().
+                sessionManagement()
+                    .sessionFixation().newSession()
+                    .maximumSessions(1).maxSessionsPreventsLogin(true)
+                    .sessionRegistry(sessionRegistry());
     }
 
     @Bean
@@ -86,18 +97,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected AuthenticationSuccessHandler authSuccessHandler() {
-        return new AppAuthenticationSuccessHandler();
+        return new SecurityWebApplicationAuthenticationSuccessHandler();
     }
 
     @Bean
     protected AuthenticationFailureHandler authFailureHandler() {
-        return new AppAuthenticationFailureHandler();
+        return new SecurityWebApplicationAuthenticationFailureHandler();
     }
-
-//    @Bean
-//    protected LogoutSuccessHandler appLogoutSuccessHandler() {
-//        return new AppLogoutSuccessHandler();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -114,8 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
-        PersistentTokenBasedRememberMeServices tokenBasedService = new PersistentTokenBasedRememberMeServices(
-                "remember-me", userDetailsService, tokenRepository);
+        PersistentTokenBasedRememberMeServices tokenBasedService = new PersistentTokenBasedRememberMeServices("remember-me", userDetailsService, tokenRepository);
         return tokenBasedService;
     }
 

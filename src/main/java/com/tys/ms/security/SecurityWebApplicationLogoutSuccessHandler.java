@@ -5,18 +5,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+public class SecurityWebApplicationLogoutSuccessHandler implements LogoutSuccessHandler {
 
-/**
- * Created by Administrator on 2016/9/24.
- */
-public class AppLogoutSuccessHandler implements LogoutSuccessHandler {
     @Autowired
     private SessionRegistry sessionRegistry;
 
@@ -31,9 +27,9 @@ public class AppLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private void removeAuthSession(Authentication authentication, SessionRegistry sessionRegistry) {
         List<SessionInformation> sessions = sessionRegistry.getAllSessions(authentication.getPrincipal(), false);
-        if (sessions.size() > 0) { // there is only 1 session allowed
-//            log.debug("removing session {} from registry", sessions.get(0).getSessionId());
+        if (sessions.size() > 0) {
             sessionRegistry.removeSessionInformation(sessions.get(0).getSessionId());
         }
     }
+
 }
