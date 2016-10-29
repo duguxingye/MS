@@ -592,6 +592,7 @@ public class AppController {
                 productIns.setCarMandatoryMoney(carMandatoryMoney);
                 productIns.setCarBusinessMoney(carTaxMoney);
                 productIns.setInsMoney(insMoney);
+                System.out.println(productIns);
                 productInsService.save(productIns);
             }
 
