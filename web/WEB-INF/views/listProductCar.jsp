@@ -2,6 +2,7 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="mvc" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html  lang="zh">
 <head>
@@ -102,33 +103,35 @@
                             <i class="material-icons">edit</i>
                         </a>
                         <ul>
-                            <li><a class="btn-floating tooltipped green" href="#modal1" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
+                            <li><a class="btn-floating tooltipped green modal-trigger" href="#modal1" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
                             <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
                             <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
                         </ul>
                     </div>
                 </div>
 
+                <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <h4>请选择Excel文件</h4>
+                            <%--<span>请选择Excel文件</span>--%>
+                            <%--<mvc:input type="file" path="file" id="file"/>--%>
+                        <%--<div class="file-field input-field col s12">--%>
+                            <%--<div class="btn">--%>
+                                <%--<span>请选择Excel文件</span>--%>
+                                <%--<mvc:input type="file" path="file" id="file"/>--%>
+                            <%--</div>--%>
+                            <%--<div class="file-path-wrapper">--%>
+                                <%--<input class="file-path validate" type="text">--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <div class="modal-footer">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">DFD</a>
+                    </div>
+                </div>
             </sec:authorize>
 
-
-
         </div>
-
-        <!-- Modal Trigger -->
-        <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
-
-        <!-- Modal Structure -->
-        <div id="modal1" class="modal">
-            <div class="modal-content">
-                <h4>Modal Header</h4>
-                <p>A bunch of text</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-            </div>
-        </div>
-
     </main>
 
     <footer>
