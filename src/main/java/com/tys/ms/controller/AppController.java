@@ -506,64 +506,99 @@ public class AppController {
 
     @RequestMapping(value="/singleUpload", method = RequestMethod.POST)
     public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
-
         if (result.hasErrors()) {
-            System.out.println("validation errors");
             return "upload";
         } else {
-            System.out.println("Fetching file");
             MultipartFile multipartFile = fileBucket.getFile();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(multipartFile.getBytes());
-            Workbook workbook;
+            Workbook wookbook = null ;
+            //判断是否为excel类型文件
             if (multipartFile.getOriginalFilename().endsWith("xls")) {
-                workbook = new HSSFWorkbook(byteArrayInputStream);
+                //2003版本的excel，用.xls结尾
+                wookbook = new HSSFWorkbook(byteArrayInputStream); //得到工作簿
             } else if (multipartFile.getOriginalFilename().endsWith("xlsx")) {
-                workbook = new XSSFWorkbook(byteArrayInputStream);
+                //2007版本的excel，用.xlsx结尾
+                wookbook = new XSSFWorkbook(byteArrayInputStream); //得到工作簿
             } else {
+                //不是excel类型文件
                 return "upload";
             }
 
-            Sheet sheet = null;
-            Row row = null;
-            Cell cell = null;
-
-            List<List<Object>> list = new ArrayList<List<Object>>();
-            //遍历Excel中所有的sheet
-            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-                sheet = workbook.getSheetAt(i);
-                if(sheet==null){continue;}
-
-                //遍历当前sheet中的所有行
-                for (int j = sheet.getFirstRowNum(); j < sheet.getLastRowNum(); j++) {
-                    row = sheet.getRow(j);
-                    if(row==null||row.getFirstCellNum()==j){continue;}
-
-                    //遍历所有的列
-                    List<Object> li = new ArrayList<Object>();
-                    for (int y = row.getFirstCellNum() + 1 ; y < row.getLastCellNum(); y++) {
-                        cell = row.getCell(y);
-                        li.add(getCellValue(cell));
-                    }
-                    list.add(li);
-                }
+            //得到一个工作表
+            Sheet sheet = wookbook.getSheetAt(0);
+            //获得表头
+            Row rowHead = sheet.getRow(0);
+            //判断表头是否正确
+            if(rowHead.getPhysicalNumberOfCells() != 14) {
+                System.out.println("表头的数量不对!");
+                return "upload";
             }
-            workbook.close();
+            //获得数据的总行数
+            int totalRowNum = sheet.getLastRowNum();
+            //要获得属性
+            String company = "";
+            String insCompany = "";
+            String productType = "";
+            String insIllustration = "";
+            String insPerson = "";
+            String carNumber = "";
+            String insTime = "";
+            String carType = "";
+            String carBusinessMoney = "";
+            String carMandatoryMoney = "";
+            String carTaxMoney = "";
+            String insMoney = "";
+            //获得所有数据
+            for(int i = 1 ; i <= totalRowNum ; i++) {
+                //获得第i行对象
+                Row row = sheet.getRow(i);
+                //获得获得第i行第1列的 String类型对象，以此类推
+                Cell cell = row.getCell((short)1);
+                company = cell.getStringCellValue().toString();
+                cell = row.getCell((short)2);
+                insCompany = cell.getStringCellValue().toString();
+                cell = row.getCell((short)3);
+                productType = cell.getStringCellValue().toString();
+                cell = row.getCell((short)4);
+                insIllustration = cell.getStringCellValue().toString();
+                cell = row.getCell((short)5);
+                insPerson = cell.getStringCellValue().toString();
+                cell = row.getCell((short)6);
+                carNumber = cell.getStringCellValue().toString();
+                cell = row.getCell((short)7);
+                insTime = cell.getStringCellValue().toString();
+                cell = row.getCell((short)8);
+                carType = cell.getStringCellValue().toString();
+                cell = row.getCell((short)9);
+                carBusinessMoney = cell.getStringCellValue().toString();
+                cell = row.getCell((short)10);
+                carMandatoryMoney = cell.getStringCellValue().toString();
+                cell = row.getCell((short)11);
+                carTaxMoney = cell.getStringCellValue().toString();
+                cell = row.getCell((short)12);
+                insMoney = cell.getStringCellValue().toString();
 
-            // TODO add convert
-            for (int j = 0; j < list.size(); j++) {
-                for (int k = 0; k < list.get(j).size(); k++) {
-                    ProductIns productIns = new ProductIns();
-                }
+                ProductIns productIns = new ProductIns();
+                productIns.setCompany(company);
+                productIns.setInsCompany(insCompany);
+                productIns.setInsType("car");
+                productIns.setProductType(productType);
+                productIns.setInsIllustration(insIllustration);
+                productIns.setInsPerson(insPerson);
+                productIns.setCarNumber(carNumber);
+                productIns.setInsTime(insTime);
+                productIns.setCarType(carType);
+                productIns.setCarBusinessMoney(carBusinessMoney);
+                productIns.setCarMandatoryMoney(carMandatoryMoney);
+                productIns.setCarBusinessMoney(carTaxMoney);
+                productIns.setInsMoney(insMoney);
+                productInsService.save(productIns);
             }
 
+            model.addAttribute("person", true);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
 
-
-            //Now do something with file...
-            FileCopyUtils.copy(fileBucket.getFile().getBytes(), new File("C:/mytemp/" + fileBucket.getFile().getOriginalFilename()));
-
-            String fileName = multipartFile.getOriginalFilename();
-            model.addAttribute("fileName", fileName);
-            return "success";
         }
     }
 
