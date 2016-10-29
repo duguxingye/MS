@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/")
 @SessionAttributes("roles")
-public class AppController {
+public class MvcWebApplicationController {
     @Autowired
     UserService userService;
 
