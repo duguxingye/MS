@@ -130,7 +130,7 @@ public class MvcWebApplicationController {
         }
         model.addAttribute("users", users);
         model.addAttribute("loginUser", getPrincipal());
-        return "istUser";
+        return "listUser";
     }
 
     @RequestMapping(value = "/add-user", method = RequestMethod.GET)
@@ -499,15 +499,13 @@ public class MvcWebApplicationController {
     public String getSingleUploadPage(ModelMap model) {
         FileBucket fileModel = new FileBucket();
         model.addAttribute("fileBucket", fileModel);
-        return "upload";
+        return "uploadProduct";
     }
-
-//    private static String UPLOAD_LOCATION="C:/mytemp/";
 
     @RequestMapping(value="/singleUpload", method = RequestMethod.POST)
     public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors()) {
-            return "upload";
+            return "uploadProduct";
         } else {
             MultipartFile multipartFile = fileBucket.getFile();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(multipartFile.getBytes());
@@ -531,7 +529,7 @@ public class MvcWebApplicationController {
             //判断表头是否正确
             if(rowHead.getPhysicalNumberOfCells() != 15) {
                 System.out.println("表头的数量不对!");
-                return "upload";
+                return "uploadProduct";
             }
             //获得数据的总行数
             int totalRowNum = sheet.getLastRowNum();

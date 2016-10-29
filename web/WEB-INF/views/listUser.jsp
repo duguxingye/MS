@@ -16,26 +16,10 @@
 	<%@include file="header.jsp"%>
 
 	<main>
-		<div class="">
 			<div class="section">
 
-                <div class="row" style="margin: auto">
+                <h5 style="padding-left: 10px;">会员列表</h5>
 
-                    <div class="col s6">
-                        <h5>会员列表</h5>
-                    </div>
-
-                    <sec:authorize access="hasRole('ADMIN') or hasRole('AREA') or hasRole('GROUP')">
-                        <div class="col s6">
-                            <a class="btn-floating btn-large red right" href="<c:url value='/addUser' />">
-                                <i class="large material-icons">add</i>
-                            </a>
-                        </div>
-                    </sec:authorize>
-
-                </div>
-
-                <br>
                 <div class="row">
                     <div class="col s12">
                         <c:if test="${not empty users}">
@@ -88,7 +72,14 @@
                     </div>
                 </div>
 
-            </div>
+                <sec:authorize access="hasRole('ADMIN') or hasRole('AREA') or hasRole('GROUP')">
+                    <div style="position: relative; height: 70px;">
+                        <div class="fixed-action-btn">
+                            <a class="btn-floating btn-large red" href="<c:url value='/add-user' />"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                </sec:authorize>
+
 		</div>
 	</main>
 
