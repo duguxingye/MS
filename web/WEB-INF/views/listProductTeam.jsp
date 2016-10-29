@@ -13,29 +13,12 @@
     <link rel="stylesheet"  href="<c:url value='/static/css/style.css' />" media="screen,projection" />
 </head>
 <body>
-<%@include file="header.jsp"%>
+    <%@include file="header.jsp"%>
 
-<main>
-    <div class="container">
+    <main>
         <div class="section">
 
-            <div class="row" style="margin: auto">
-
-                <div class="col s6">
-                    <h5>列表</h5>
-                </div>
-
-                <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR')">
-                    <div class="col s6">
-                        <a class="btn-floating btn-large teal lighten-1 right" href="<c:url value='/add-product-team' />">
-                            <i class="large material-icons">add</i>
-                        </a>
-                    </div>
-                </sec:authorize>
-
-            </div>
-
-            <br>
+            <h5 style="padding-left: 10px;">车险列表</h5>
             <div class="row">
                 <div class="col s12">
                     <c:if test="${not empty productInsList}">
@@ -88,21 +71,36 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-</main>
+            <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR') or hasRole('ADMIN')">
+                <div style="position: relative; height: 70px;">
+                    <div class="fixed-action-btn horizontal click-to-toggle">
+                        <a class="btn-floating btn-large red">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <ul>
+                            <li><a class="btn-floating tooltipped green" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
+                            <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
+                            <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </sec:authorize>
 
-<footer>
-    <div class="footer-copyright">
-        <div class="container center">
-            版权所有 © 泰允升网络科技有限公司
-        </div>
-    </div>
-</footer>
 
-<script src="static/js/jquery-2.1.1.min.js"></script>
-<script src="static/js/materialize.js"></script>
-<script src="static/js/init.js"></script>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-copyright">
+            <div class="container center">
+                版权所有 © 泰允升网络科技有限公司
+            </div>
+        </div>
+    </footer>
+
+    <script src="static/js/jquery-2.1.1.min.js"></script>
+    <script src="static/js/materialize.js"></script>
+    <script src="static/js/init.js"></script>
 
 </body>
 </html>
