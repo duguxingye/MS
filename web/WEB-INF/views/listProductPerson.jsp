@@ -24,9 +24,15 @@
                         <table class="bordered">
                             <thead>
                             <tr>
-                                <th>id</th>
-                                <th>employee</th>
-                                <th>employeeId</th>
+                                <th>序号</th>
+                                <th>承保公司地市</th>
+                                <th>产险销售人员姓名</th>
+                                <th>报价公司</th>
+                                <th>险种</th>
+                                <th>投保类型</th>
+                                <th>报价时间</th>
+                                <th>车辆类型</th>
+                                <th>保费合计</th>
                                 <sec:authorize access="hasRole('ADMIN')">
                                     <th></th>
                                     <th></th>
@@ -35,29 +41,35 @@
                             </thead>
 
                             <tbody>
-                            <c:forEach items="${productInsList}" var="productIns">
+                            <c:forEach items="${productInsList}" var="productIns" varStatus="status">
                                 <tr>
-                                    <td>${productIns.id}</td>
+                                    <td>${status.index + 1}</td>
+                                    <td>${productIns.company}</td>
                                     <td>${productIns.employee}</td>
-                                    <td>${productIns.employeeId}</td>
-                                        <%--<sec:authorize access="hasRole('ADMIN')">--%>
-                                        <%--<td>--%>
-                                        <%--<a href="<c:url value='/edit-user-${user.jobId}' />" class="waves-effect waves-light btn">修改</a>--%>
-                                        <%--</td>--%>
-                                        <%--<td>--%>
-                                        <%--<a href="#${user.jobId}" class="waves-effect waves-light btn modal-trigger">删除</a>--%>
-                                        <%--<div id="${user.jobId}" class="modal">--%>
-                                        <%--<div class="modal-content">--%>
-                                        <%--<h4>确认删除${user.jobId}？</h4>--%>
-                                        <%--<p>一旦删除，无法撤销！确定想要删除？</p>--%>
-                                        <%--</div>--%>
-                                        <%--<div class="modal-footer">--%>
-                                        <%--<a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">取消</a>--%>
-                                        <%--<a href="<c:url value='/delete-user-${user.jobId}' />" class=" modal-action modal-close waves-effect waves-green btn">确认</a>--%>
-                                        <%--</div>--%>
-                                        <%--</div>--%>
-                                        <%--</td>--%>
-                                        <%--</sec:authorize>--%>
+                                    <td>${productIns.insCompany}</td>
+                                    <td>${productIns.productType}</td>
+                                    <td>${productIns.insIllustration}</td>
+                                    <td>${productIns.insTime}</td>
+                                    <td>${productIns.carType}</td>
+                                    <td>${productIns.insMoney}</td>
+                                    <sec:authorize access="hasRole('ADMIN')">
+                                        <td>
+                                            <a href="<c:url value='/edit-user-${user.jobId}' />" class="waves-effect waves-light btn">修改</a>
+                                        </td>
+                                        <td>
+                                            <a href="#${user.jobId}" class="waves-effect waves-light btn modal-trigger">删除</a>
+                                            <div id="${user.jobId}" class="modal">
+                                                <div class="modal-content">
+                                                    <h4>确认删除${user.jobId}？</h4>
+                                                    <p>一旦删除，无法撤销！确定想要删除？</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+                                                    <a href="<c:url value='/delete-user-${user.jobId}' />" class=" modal-action modal-close waves-effect waves-green btn">确认</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </sec:authorize>
                                 </tr>
                             </c:forEach>
                             </tbody>

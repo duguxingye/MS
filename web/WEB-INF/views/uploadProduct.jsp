@@ -9,17 +9,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>上传</title>
     <link rel="stylesheet" href="<c:url value='/static/css/material-icons.css' />" media="screen,projection" />
-    <link rel="stylesheet" href="<c:url value='/static/css/ms-materialize.css' />" media="screen,projection" />
+    <link rel="stylesheet" href="<c:url value='/static/css/materialize.css' />" media="screen,projection" />
     <link rel="stylesheet"  href="<c:url value='/static/css/style.css' />" media="screen,projection" />
 </head>
 <body>
-    <%@include file="header.jsp"%>
 
-    <main>
-        <div class="container">
+    <div class="container">
+        <div class="card" style="margin: 0 auto;max-width: 500px;">
             <mvc:form method="POST" modelAttribute="fileBucket" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="file-field input-field col s12 m6">
+                <div class="row" style="padding: 10px;">
+                    <div class="file-field input-field col s12">
                         <div class="btn">
                             <span>请选择Excel文件</span>
                             <mvc:input type="file" path="file" id="file"/>
@@ -31,13 +30,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12 m6 center">
+                    <div class="input-field col s12 center">
                         <input type="submit" value="确定上传" class="waves-effect waves-light btn-large red">
                     </div>
                 </div>
             </mvc:form>
         </div>
-    </main>
+    </div>
 
     <footer>
         <div class="footer-copyright">

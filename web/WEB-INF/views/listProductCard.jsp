@@ -49,15 +49,9 @@
                                     <td>${productIns.insCompany}</td>
                                     <td>${productIns.productType}</td>
                                     <td>${productIns.insIllustration}</td>
-                                    <td>${productIns.insPerson}</td>
-                                    <td>${productIns.carNumber}</td>
                                     <td>${productIns.insTime}</td>
                                     <td>${productIns.carType}</td>
-                                    <td>${productIns.carBusinessMoney}</td>
-                                    <td>${productIns.carMandatoryMoney}</td>
-                                    <td>${productIns.carTaxMoney}</td>
                                     <td>${productIns.insMoney}</td>
-
                                     <sec:authorize access="hasRole('ADMIN')">
                                         <td>
                                             <a href="<c:url value='/edit-user-${user.jobId}' />" class="waves-effect waves-light btn">修改</a>

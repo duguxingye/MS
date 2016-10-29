@@ -102,15 +102,33 @@
                             <i class="material-icons">edit</i>
                         </a>
                         <ul>
-                            <li><a class="btn-floating tooltipped green" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
+                            <li><a class="btn-floating tooltipped green" href="#modal1" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
                             <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
                             <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
                         </ul>
                     </div>
                 </div>
+
             </sec:authorize>
 
+
+
         </div>
+
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4>Modal Header</h4>
+                <p>A bunch of text</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+            </div>
+        </div>
+
     </main>
 
     <footer>
@@ -125,7 +143,7 @@
     <script src="static/js/materialize.js"></script>
     <script src="static/js/init.js"></script>
     <script>
-        (document).ready(function(){
+        $(document).ready(function(){
             $('.tooltipped').tooltip({delay: 50});
             $('.modal-trigger').leanModal();
         });
