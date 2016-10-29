@@ -1,4 +1,4 @@
-package com.tys.ms.security;
+package com.tys.ms.configuration;
 
 import com.tys.ms.model.User;
 import com.tys.ms.service.UserProfileServiceImpl;

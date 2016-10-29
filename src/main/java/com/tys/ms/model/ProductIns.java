@@ -200,4 +200,26 @@ public class ProductIns implements Serializable{
     public void setProductType(String productType) {
         this.productType = productType;
     }
+
+    @Override
+    public String toString() {
+        return "ProductIns{" +
+                "id=" + id +
+                ", company='" + company + '\'' +
+                ", employee='" + employee + '\'' +
+                ", employeeId='" + employeeId + '\'' +
+                ", insCompany='" + insCompany + '\'' +
+                ", insType='" + insType + '\'' +
+                ", insIllustration='" + insIllustration + '\'' +
+                ", insPerson='" + insPerson + '\'' +
+                ", carNumber='" + carNumber + '\'' +
+                ", insTime='" + insTime + '\'' +
+                ", carType='" + carType + '\'' +
+                ", carBusinessMoney='" + carBusinessMoney + '\'' +
+                ", carMandatoryMoney='" + carMandatoryMoney + '\'' +
+                ", carTaxMoney='" + carTaxMoney + '\'' +
+                ", insMoney='" + insMoney + '\'' +
+                ", productType='" + productType + '\'' +
+                '}';
+    }
 }

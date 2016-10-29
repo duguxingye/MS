@@ -1,5 +1,7 @@
-package com.tys.ms.security;
+package com.tys.ms.configuration;
 
+import com.tys.ms.security.AppAuthenticationFailureHandler;
+import com.tys.ms.security.AppAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

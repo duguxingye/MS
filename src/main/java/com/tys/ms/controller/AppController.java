@@ -529,7 +529,7 @@ public class AppController {
             //获得表头
             Row rowHead = sheet.getRow(0);
             //判断表头是否正确
-            if(rowHead.getPhysicalNumberOfCells() != 14) {
+            if(rowHead.getPhysicalNumberOfCells() != 15) {
                 System.out.println("表头的数量不对!");
                 return "upload";
             }
@@ -537,6 +537,8 @@ public class AppController {
             int totalRowNum = sheet.getLastRowNum();
             //要获得属性
             String company = "";
+            String employee = "";
+            String employeeId = "";
             String insCompany = "";
             String productType = "";
             String insIllustration = "";
@@ -544,10 +546,10 @@ public class AppController {
             String carNumber = "";
             String insTime = "";
             String carType = "";
-            String carBusinessMoney = "";
-            String carMandatoryMoney = "";
-            String carTaxMoney = "";
-            String insMoney = "";
+            Double carBusinessMoney = 0.00;
+            Double carMandatoryMoney = 0.00;
+            Double carTaxMoney =0.00;
+            Double insMoney = 0.00;
             //获得所有数据
             for(int i = 1 ; i <= totalRowNum ; i++) {
                 //获得第i行对象
@@ -556,30 +558,36 @@ public class AppController {
                 Cell cell = row.getCell((short)1);
                 company = cell.getStringCellValue().toString();
                 cell = row.getCell((short)2);
-                insCompany = cell.getStringCellValue().toString();
+                employee = cell.getStringCellValue().toString();
                 cell = row.getCell((short)3);
-                productType = cell.getStringCellValue().toString();
+                employeeId = cell.getStringCellValue().toString();
                 cell = row.getCell((short)4);
-                insIllustration = cell.getStringCellValue().toString();
+                insCompany = cell.getStringCellValue().toString();
                 cell = row.getCell((short)5);
-                insPerson = cell.getStringCellValue().toString();
+                productType = cell.getStringCellValue().toString();
                 cell = row.getCell((short)6);
-                carNumber = cell.getStringCellValue().toString();
+                insIllustration = cell.getStringCellValue().toString();
                 cell = row.getCell((short)7);
-                insTime = cell.getStringCellValue().toString();
+                insPerson = cell.getStringCellValue().toString();
                 cell = row.getCell((short)8);
-                carType = cell.getStringCellValue().toString();
+                carNumber = cell.getStringCellValue().toString();
                 cell = row.getCell((short)9);
-                carBusinessMoney = cell.getStringCellValue().toString();
+                insTime = cell.getStringCellValue().toString();
                 cell = row.getCell((short)10);
-                carMandatoryMoney = cell.getStringCellValue().toString();
+                carType = cell.getStringCellValue().toString();
                 cell = row.getCell((short)11);
-                carTaxMoney = cell.getStringCellValue().toString();
+                carBusinessMoney = (double) cell.getNumericCellValue();
                 cell = row.getCell((short)12);
-                insMoney = cell.getStringCellValue().toString();
+                carMandatoryMoney = (double) cell.getNumericCellValue();
+                cell = row.getCell((short)13);
+                carTaxMoney = (double) cell.getNumericCellValue();
+                cell = row.getCell((short)14);
+                insMoney = (double) cell.getNumericCellValue();
 
                 ProductIns productIns = new ProductIns();
                 productIns.setCompany(company);
+                productIns.setEmployee(employee);
+                productIns.setEmployeeId(employeeId);
                 productIns.setInsCompany(insCompany);
                 productIns.setInsType("car");
                 productIns.setProductType(productType);
@@ -588,11 +596,13 @@ public class AppController {
                 productIns.setCarNumber(carNumber);
                 productIns.setInsTime(insTime);
                 productIns.setCarType(carType);
-                productIns.setCarBusinessMoney(carBusinessMoney);
-                productIns.setCarMandatoryMoney(carMandatoryMoney);
-                productIns.setCarBusinessMoney(carTaxMoney);
-                productIns.setInsMoney(insMoney);
+                productIns.setCarBusinessMoney(String.valueOf(carBusinessMoney));
+                productIns.setCarMandatoryMoney(String.valueOf(carMandatoryMoney));
+                productIns.setCarTaxMoney(String.valueOf(carTaxMoney));
+                productIns.setInsMoney(String.valueOf(insMoney));
+                System.out.println("--------------------------");
                 System.out.println(productIns);
+                System.out.println("--------------------------");
                 productInsService.save(productIns);
             }
 

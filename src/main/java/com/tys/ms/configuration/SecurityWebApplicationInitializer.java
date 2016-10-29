@@ -1,4 +1,4 @@
-package com.tys.ms.security;
+package com.tys.ms.configuration;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
