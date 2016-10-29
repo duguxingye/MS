@@ -50,9 +50,6 @@ public class User implements Serializable {
     @Column(name="HAS_LOCKED", nullable=false)
     private boolean hasLocked = false;
 
-    @Column(name="HAS_PASSED", nullable=false)
-    private boolean hasPassed = true;
-
     public User(String jobId, String oldPassword, String password, String retypePassword, String name, String phone, String leaderId, UserProfile userProfile, boolean hasLocked, boolean hasPassed) {
         this.jobId = jobId;
         this.oldPassword = oldPassword;
@@ -63,7 +60,6 @@ public class User implements Serializable {
         this.leaderId = leaderId;
         this.userProfile = userProfile;
         this.hasLocked = hasLocked;
-        this.hasPassed = hasPassed;
     }
 
     public User() {
@@ -147,14 +143,6 @@ public class User implements Serializable {
 
     public void setHasLocked(boolean hasLocked) {
         this.hasLocked = hasLocked;
-    }
-
-    public boolean isHasPassed() {
-        return hasPassed;
-    }
-
-    public void setHasPassed(boolean hasPassed) {
-        this.hasPassed = hasPassed;
     }
 
     @Override

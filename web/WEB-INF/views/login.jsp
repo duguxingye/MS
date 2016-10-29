@@ -26,7 +26,6 @@
                 <div class="card" style="border-radius: 5px 5px 0 0;margin: 0 10px 0 10px;height: 10px;"></div>
                 <div class="card" style="border-radius: 5px;margin: 0;padding: 0;">
                     <form action="${loginUrl}" method="post" class="form-horizontal">
-
                         <br>
                         <blockquote class="flow-text">登录</blockquote>
                         <div class="row" style="padding: 20px;">
@@ -60,7 +59,6 @@
                                 </div>
                             </div>
 
-
                             <div class="col s12">
                                 <c:if test="${param.error != null}">
                                     <div class="card red">
@@ -78,7 +76,6 @@
                             <div class="col s12 center" style="padding: 15px 0 0 0;">
                                 <button id="embed-submit" type="submit" class="waves-effect waves-light btn-large center">登陆</button>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -100,9 +97,6 @@
     <script src="static/js/init.js"></script>
     <script src="static/js/gt.js"></script>
     <script>
-
-
-
         var handlerEmbed = function (captchaObj) {
             $("#embed-submit").click(function (e) {
                 var validate = captchaObj.getValidate();
@@ -114,29 +108,22 @@
                     e.preventDefault();
                 }
             });
-            // 将验证码加到id为captcha的元素里，同时会有三个input的值：geetest_challenge, geetest_validate, geetest_seccode
             captchaObj.appendTo("#embed-captcha");
             captchaObj.onReady(function () {
                 $("#embed-captcha")[0].className = "show";
                 $("#wait")[0].className = "hide";
             });
-            // 更多接口参考：http://www.geetest.com/install/sections/idx-client-sdk.html
         };
         $.ajax({
-            // 获取id，challenge，success（是否启用failback）
-            url: "/geetValidate?t=" + (new Date()).getTime(), // 加随机数防止缓存
+            url: "/geetValidate?t=" + (new Date()).getTime(),
             type: "get",
             dataType: "json",
             success: function (data) {
-                // 使用initGeetest接口
-                // 参数1：配置参数
-                // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
                 initGeetest({
                     gt: data.gt,
                     challenge: data.challenge,
-                    product: "float", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
-                    offline: !data.success // 表示用户后台检测极验服务器是否宕机，一般不需要关注
-                    // 更多配置参数请参见：http://www.geetest.com/install/sections/idx-client-sdk.html#config
+                    product: "float",
+                    offline: !data.success
                 }, handlerEmbed);
             }
         });

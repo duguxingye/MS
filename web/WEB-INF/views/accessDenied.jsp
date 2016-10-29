@@ -20,9 +20,9 @@
                     <div class="card" style="margin: 0 auto;max-width: 500px;">
                         <div class="card-image">
                             <img src="static/image/index/error.jpg">
-                            <span class="card-title">权限不够</span>
                         </div>
                         <div class="card-content">
+                            <h5>权限不够</h5>
                             <span>你好 <strong>${loggedinuser}</strong>，你没有权限浏览本页面</span>
                         </div>
                         <div class="card-action">

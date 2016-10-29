@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh">
 <html>
@@ -19,9 +19,9 @@
                 <div class="card" style="margin: 0 auto;max-width: 500px;">
                     <div class="card-image">
                         <img src="static/image/index/done.png">
-                        <span class="card-title">修改成功</span>
                     </div>
                     <div class="card-content">
+                        <h5>修改成功</h5>
                         <p><span id="showTime">5</span>秒后将自动退出登录</p>
                     </div>
                     <div class="card-action">

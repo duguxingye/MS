@@ -24,7 +24,7 @@
                     <p>phone : ${users.phone}</p>
                     <p>jobId : ${users.jobId}</p>
                 </c:if>
-                <a  href="<c:url value='/change-pwd-${users.jobId}' />" class="waves-effect waves-light btn"><i class="material-icons left">edit</i>修改密码</a>
+                <a  href="<c:url value='/reset-pwd-${users.jobId}' />" class="waves-effect waves-light btn"><i class="material-icons left">edit</i>修改密码</a>
             </div>
         </div>
     </main>

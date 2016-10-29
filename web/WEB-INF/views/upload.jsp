@@ -35,5 +35,47 @@
     </form:form>
     <a href="<c:url value='/welcome' />">Home</a>
 </div>
+
+<script src="static/js/jquery-2.1.1.min.js"></script>
+<script src="static/js/materialize.js"></script>
+<script src="static/js/init.js"></script>
+    <script type="text/javascript">
+            //ajax ????????
+            $(document).ready(function(){
+                $('#btn').click(function(){
+                    if(checkData()){
+                        $('#form1').ajaxSubmit({
+                            url:'uploadExcel/ajaxUpload.do',
+                            dataType: 'text',
+                            success: resutlMsg,
+                            error: errorMsg
+                        });
+                        function resutlMsg(msg){
+                            alert(msg);
+                            $("#upfile").val("");
+                        }
+                        function errorMsg(){
+                            alert("??excel???");
+                        }
+                    }
+                });
+            });
+
+    //JS??form????
+    function checkData(){
+        var fileDir = $("#upfile").val();
+        var suffix = fileDir.substr(fileDir.lastIndexOf("."));
+        if("" == fileDir){
+            alert("???????Excel???");
+            return false;
+        }
+        if(".xls" != suffix && ".xlsx" != suffix ){
+            alert("??Excel????????");
+            return false;
+        }
+        return true;
+    }
+</script>
+
 </body>
 </html>
