@@ -348,7 +348,7 @@ public class MvcWebApplicationController {
             model.addAttribute("loginUser", getPrincipal());
             return "redirect:/" + path;
         } else {
-            productInsService.save(productIns);
+            productInsService.update(productIns);
             model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductInsDone";

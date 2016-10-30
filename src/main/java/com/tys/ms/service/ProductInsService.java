@@ -11,6 +11,8 @@ public interface ProductInsService {
 
     void save(ProductIns productIns);
 
+    void update(ProductIns productIns);
+
     void deleteById(int id);
 
     List<ProductIns> findAllProductIns();

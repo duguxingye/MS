@@ -73,7 +73,7 @@
                                             <a href="#${productIns.id}" class="waves-effect waves-light btn modal-trigger">删除</a>
                                             <div id="${productIns.id}" class="modal">
                                                 <div class="modal-content">
-                                                    <h4>确认删除${user.jobId}？</h4>
+                                                    <h4>确认删除？</h4>
                                                     <p>一旦删除，无法撤销！确定想要删除？</p>
                                                 </div>
                                                 <div class="modal-footer">

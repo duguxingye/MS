@@ -11,8 +11,7 @@ public class ProductIns implements Serializable{
 
     private static final long serialVersionUID = -4666041285389731203L;
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
     @NotEmpty

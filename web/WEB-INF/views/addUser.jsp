@@ -96,8 +96,6 @@
                             </div>
                         </div>
 
-                        <mvc:input type="hidden" path="hasPassed" id="hasPassed"/>
-
                         <mvc:input type="hidden" path="hasLocked" id="hasLocked"/>
 
                         <br>

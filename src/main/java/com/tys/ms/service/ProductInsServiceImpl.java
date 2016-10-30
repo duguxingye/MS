@@ -30,6 +30,24 @@ public class ProductInsServiceImpl implements ProductInsService {
     }
 
     @Override
+    public void update(ProductIns productIns) {
+        ProductIns entity = productInsDao.findById(productIns.getId());
+        if(entity != null) {
+            entity.setCompany(productIns.getCompany());
+            entity.setInsCompany(productIns.getInsCompany());
+            entity.setProductType(productIns.getProductType());
+            entity.setInsIllustration(productIns.getInsIllustration());
+            entity.setInsPerson(productIns.getInsPerson());
+            entity.setCarNumber(productIns.getCarNumber());
+            entity.setInsTime(productIns.getInsTime());
+            entity.setCarBusinessMoney(productIns.getCarBusinessMoney());
+            entity.setCarMandatoryMoney(productIns.getCarMandatoryMoney());
+            entity.setCarTaxMoney(productIns.getCarTaxMoney());
+            entity.setInsMoney(productIns.getInsMoney());
+        }
+    }
+
+    @Override
     public void deleteById(int id) {
         productInsDao.deleteById(id);
     }
