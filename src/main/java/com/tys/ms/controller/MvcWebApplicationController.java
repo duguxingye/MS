@@ -249,29 +249,28 @@ public class MvcWebApplicationController {
         return "redirect:/list";
     }
 
-    @RequestMapping(value = "/list-product-car", method = RequestMethod.GET)
-    public String listProductCar(ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType("car");
-        List<ProductIns> targetProductInsList = new ArrayList<>();
-        String loginUserJobId = getPrincipal();
-        User loginUser = userService.findByJobId(loginUserJobId);
-        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-            targetProductInsList.addAll(productInsList);
-        } else {
-            List<String> jobIdList = userService.findAllDownJobId(loginUserJobId);
-            for (int i = 0; i < jobIdList.size(); i++) {
-                for (int j = 0; j < productInsList.size(); j++) {
-                    if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
-                        targetProductInsList.add(productInsList.get(j));
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("productInsList", targetProductInsList);
-        model.addAttribute("loginUser", loginUserJobId);
-        return "listProductCar";
-    }
+//    @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
+//    public String listProduct(@PathVariable String type, ModelMap model) {
+//        List<ProductIns> productInsList = productInsService.findByType(type);
+//        List<ProductIns> targetProductInsList = new ArrayList<>();
+//        String loginUserJobId = getPrincipal();
+//        User loginUser = userService.findByJobId(loginUserJobId);
+//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
+//            targetProductInsList.addAll(productInsList);
+//        } else {
+//            List<String> jobIdList = userService.findAllDownJobId(loginUserJobId);
+//            for (int i = 0; i < jobIdList.size(); i++) {
+//                for (int j = 0; j < productInsList.size(); j++) {
+//                    if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
+//                        targetProductInsList.add(productInsList.get(j));
+//                    }
+//                }
+//            }
+//        }
+//        model.addAttribute("productInsList", targetProductInsList);
+//        model.addAttribute("loginUser", loginUserJobId);
+//        return "listProductCard";
+//    }
 
     @RequestMapping(value = "/export-product-{type}", method = RequestMethod.GET)
     public ModelAndView getExcel(@PathVariable String type, ModelMap model) {
@@ -294,7 +293,17 @@ public class MvcWebApplicationController {
         List<ProductIns> productInsList = productInsService.findByType(type);
         model.addAttribute("productInsList", productInsList);
         model.addAttribute("loginUser", getPrincipal());
-        return "listProductCard";
+        String page = "";
+        if ("car".equals(type)) {
+            page = "listProductCar";
+        } else if ("person".equals(type)) {
+            page = "listProductPerson";
+        } else if ("team".equals(type)) {
+            page = "listProductTeam";
+        } else if ("card".equals(type)) {
+            page = "listProductCard";
+        }
+        return page;
     }
 
     @RequestMapping(value = "/add-product-{type}", method = RequestMethod.GET)
