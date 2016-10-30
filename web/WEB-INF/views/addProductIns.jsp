@@ -75,23 +75,23 @@
                         </div>
                     </div>
 
-                    <c:if test="${person}">
+                    <c:if test="${type == 'person'}">
                         <mvc:input type="hidden" value="person" path="insType" id="insType"/>
                         <mvc:input type="hidden" value="寿险" path="productType" id="productType" />
                     </c:if>
 
-                    <c:if test="${card}">
+                    <c:if test="${type == 'card'}">
                         <mvc:input type="hidden" value="card" path="insType" id="insType"/>
                         <mvc:input type="hidden" value="卡保险" path="productType" id="productType" />
                     </c:if>
 
-                    <c:if test="${team}">
+                    <c:if test="${type == 'team'}">
                         <mvc:input type="hidden" value="team" path="insType" id="insType"/>
                         <mvc:input type="hidden" value="团险" path="productType" id="productType" />
                     </c:if>
 
 
-                    <c:if test="${car}">
+                    <c:if test="${type == 'car'}">
 
                         <mvc:input type="hidden" value="car" path="insType" id="insType"/>
 

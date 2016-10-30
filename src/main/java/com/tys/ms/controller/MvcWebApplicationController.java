@@ -249,48 +249,10 @@ public class MvcWebApplicationController {
         return "redirect:/list";
     }
 
-//    @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
-//    public String listProduct(@PathVariable String type, ModelMap model) {
-//        List<ProductIns> productInsList = productInsService.findByType(type);
-//        List<ProductIns> targetProductInsList = new ArrayList<>();
-//        String loginUserJobId = getPrincipal();
-//        User loginUser = userService.findByJobId(loginUserJobId);
-//        if (loginUser.getUserProfile().getType().equals("ADMIN")) {
-//            targetProductInsList.addAll(productInsList);
-//        } else {
-//            List<String> jobIdList = userService.findAllDownJobId(loginUserJobId);
-//            for (int i = 0; i < jobIdList.size(); i++) {
-//                for (int j = 0; j < productInsList.size(); j++) {
-//                    if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
-//                        targetProductInsList.add(productInsList.get(j));
-//                    }
-//                }
-//            }
-//        }
-//        model.addAttribute("productInsList", targetProductInsList);
-//        model.addAttribute("loginUser", loginUserJobId);
-//        return "listProductCard";
-//    }
-
-    @RequestMapping(value = "/export-product-{type}", method = RequestMethod.GET)
-    public ModelAndView getExcel(@PathVariable String type, ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType(type);
-        List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
-        List<ProductIns> targetProductInsList = new ArrayList<>();
-        for (int i = 0; i < jobIdList.size(); i++) {
-            for (int j = 0; j < productInsList.size(); j++) {
-                if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
-                    targetProductInsList.add(productInsList.get(j));
-                }
-            }
-        }
-        model.addAttribute("productInsList", targetProductInsList);
-        return new ModelAndView(new ProductXlsxView(), model);
-    }
-
     @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
-    public String listProductCard(@PathVariable String type, ModelMap model) {
+    public String listProductIns(@PathVariable String type, ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType(type);
+        model.addAttribute("type", type);
         model.addAttribute("productInsList", productInsList);
         model.addAttribute("loginUser", getPrincipal());
         String page = "";
@@ -307,16 +269,16 @@ public class MvcWebApplicationController {
     }
 
     @RequestMapping(value = "/add-product-{type}", method = RequestMethod.GET)
-    public String addProductCar(@PathVariable String type,ModelMap model) {
+    public String addProductIns(@PathVariable String type,ModelMap model) {
         ProductIns productIns = new ProductIns();
-        model.addAttribute("productIns", productIns);
         model.addAttribute("type", type);
+        model.addAttribute("productIns", productIns);
         model.addAttribute("loginUser", getPrincipal());
         return "addProductIns";
     }
 
     @RequestMapping(value = "/add-product-{type}", method = RequestMethod.POST)
-    public String saveProductCar(@Valid ProductIns productIns, BindingResult result, @PathVariable String type, ModelMap model) {
+    public String saveProductIns(@Valid ProductIns productIns, BindingResult result, @PathVariable String type, ModelMap model) {
         if ("car".equals(type)) {
             if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
                 // 0 相等，1 不相等
@@ -349,6 +311,22 @@ public class MvcWebApplicationController {
             model.addAttribute("loginUser", getPrincipal());
             return "addProductInsDone";
         }
+    }
+
+    @RequestMapping(value = "/export-product-{type}", method = RequestMethod.GET)
+    public ModelAndView getExcel(@PathVariable String type, ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType(type);
+        List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
+        List<ProductIns> targetProductInsList = new ArrayList<>();
+        for (int i = 0; i < jobIdList.size(); i++) {
+            for (int j = 0; j < productInsList.size(); j++) {
+                if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
+                    targetProductInsList.add(productInsList.get(j));
+                }
+            }
+        }
+        model.addAttribute("productInsList", targetProductInsList);
+        return new ModelAndView(new ProductXlsxView(), model);
     }
 
     public static BigDecimal add(String num1, String num2, String num3) {

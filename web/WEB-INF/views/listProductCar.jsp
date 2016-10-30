@@ -96,39 +96,29 @@
                 </div>
             </div>
 
-            <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR') or hasRole('ADMIN')">
+            <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('REGULAR')">
                 <div style="position: relative; height: 70px;">
                     <div class="fixed-action-btn horizontal click-to-toggle">
                         <a class="btn-floating btn-large red">
                             <i class="material-icons">edit</i>
                         </a>
                         <ul>
-                            <li><a class="btn-floating tooltipped green" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
+                            <li><a class="btn-floating tooltipped green" href="<c:url value='/upload-product-car' />" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
                             <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
                             <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
                         </ul>
                     </div>
                 </div>
+            </sec:authorize>
 
-                <div id="modal1" class="modal">
-                    <div class="modal-content">
-                        <h4>请选择Excel文件</h4>
-                            <%--<span>请选择Excel文件</span>--%>
-                            <%--<mvc:input type="file" path="file" id="file"/>--%>
-                        <%--<div class="file-field input-field col s12">--%>
-                            <%--<div class="btn">--%>
-                                <%--<span>请选择Excel文件</span>--%>
-                                <%--<mvc:input type="file" path="file" id="file"/>--%>
-                            <%--</div>--%>
-                            <%--<div class="file-path-wrapper">--%>
-                                <%--<input class="file-path validate" type="text">--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <div class="modal-footer">
-                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">DFD</a>
-                    </div>
+            <sec:authorize access="hasRole('ADMIN')">
+            <div style="position: relative; height: 70px;">
+                <div class="fixed-action-btn">
+                    <a class="btn-floating btn-large red">
+                        <i class="material-icons">add</i>
+                    </a>
                 </div>
+            </div>
             </sec:authorize>
 
         </div>
