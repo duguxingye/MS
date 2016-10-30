@@ -100,8 +100,8 @@
             <sec:authorize access="hasRole('ADMIN')">
                 <div style="position: relative; height: 70px;">
                     <div class="fixed-action-btn">
-                        <a class="btn-floating btn-large red">
-                            <i class="material-icons">add</i>
+                        <a class="btn-floating btn-large red" href="<c:url value='/export-product-person' />">
+                            <i class="material-icons">archive</i>
                         </a>
                     </div>
                 </div>
