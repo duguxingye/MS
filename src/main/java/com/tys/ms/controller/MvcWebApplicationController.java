@@ -273,9 +273,9 @@ public class MvcWebApplicationController {
         return "listProductCar";
     }
 
-    @RequestMapping(value = "/export-product-car", method = RequestMethod.GET)
-    public ModelAndView getExcel(ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType("car");
+    @RequestMapping(value = "/export-product-{type}", method = RequestMethod.GET)
+    public ModelAndView getExcel(@PathVariable String type, ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType(type);
         List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
         List<ProductIns> targetProductInsList = new ArrayList<>();
         for (int i = 0; i < jobIdList.size(); i++) {
@@ -306,9 +306,9 @@ public class MvcWebApplicationController {
         return "listProductTeam";
     }
 
-    @RequestMapping(value = "/list-product-card", method = RequestMethod.GET)
-    public String listProductCard(ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType("card");
+    @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
+    public String listProductCard(@PathVariable String type, ModelMap model) {
+        List<ProductIns> productInsList = productInsService.findByType(type);
         model.addAttribute("productInsList", productInsList);
         model.addAttribute("loginUser", getPrincipal());
         return "listProductCard";
@@ -495,15 +495,16 @@ public class MvcWebApplicationController {
         return userProfileService.findAll();
     }
 
-    @RequestMapping(value="/singleUpload", method = RequestMethod.GET)
-    public String getSingleUploadPage(ModelMap model) {
+    @RequestMapping(value="/upload-product", method = RequestMethod.GET)
+    public String uploadProductPage(ModelMap model) {
+        model.addAttribute("type", "car");
         FileBucket fileModel = new FileBucket();
         model.addAttribute("fileBucket", fileModel);
         return "uploadProduct";
     }
 
-    @RequestMapping(value="/singleUpload", method = RequestMethod.POST)
-    public String singleFileUpload(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
+    @RequestMapping(value="/upload-product", method = RequestMethod.POST)
+    public String saveUploadProduct(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
         if (result.hasErrors()) {
             return "uploadProduct";
         } else {

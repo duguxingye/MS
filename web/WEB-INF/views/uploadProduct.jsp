@@ -14,8 +14,13 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="card" style="margin: 0 auto;max-width: 500px;">
+    <div class="section">
+        <h2 class="center">导入Excel文件</h2>
+        <h5 class="center">请核对信息后上传</h5>
+    </div>
+
+    <div class="section" style="margin: 0 auto;max-width: 750px;">
+        <div class="card" style="border-radius: 5px;margin: 10px;padding: 5px;">
             <mvc:form method="POST" modelAttribute="fileBucket" enctype="multipart/form-data">
                 <div class="row" style="padding: 10px;">
                     <div class="file-field input-field col s12">
