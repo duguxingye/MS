@@ -94,6 +94,7 @@
                     <c:if test="${type == 'car'}">
 
                         <mvc:input type="hidden" value="car" path="insType" id="insType"/>
+                        <mvc:input type="hidden" value="车险" path="productType" id="productType" />
 
                         <div class="row">
                             <div class="input-field col s12 m6">

@@ -36,9 +36,9 @@ public class ProductInsDaoImpl extends AbstractDao<Integer, ProductIns> implemen
     }
 
     @Override
-    public void deleteByEmployeeId(String employeeId) {
+    public void deleteById(int id) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("employeeId", employeeId));
+        criteria.add(Restrictions.eq("id", id));
         ProductIns productIns = (ProductIns)criteria.uniqueResult();
         delete(productIns);
     }

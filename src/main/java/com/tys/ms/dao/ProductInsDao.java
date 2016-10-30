@@ -11,7 +11,7 @@ public interface ProductInsDao {
 
     void save(ProductIns productIns);
 
-    void deleteByEmployeeId(String employeeId);
+    void deleteById(int id);
 
     List<ProductIns> findAllProductIns();
 

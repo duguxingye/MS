@@ -82,17 +82,12 @@ public class MvcWebApplicationController {
     public String geetValidate(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key());
         String resStr = "{}";
-        String geetUserId = "tys-user"; //自定义geetUserId
-        //进行验证预处理
+        String geetUserId = "tys-user";
         int gtServerStatus = gtSdk.preProcess(geetUserId);
-        //将服务器状态设置到session中
         request.getSession().setAttribute(gtSdk.gtServerStatusSessionKey, gtServerStatus);
-        //将geetUserId设置到session中
         request.getSession().setAttribute("geetUserId", geetUserId);
-
         resStr = gtSdk.getResponseStr();
         model.addAttribute("resStr", resStr);
-
         return resStr;
     }
 
@@ -246,11 +241,11 @@ public class MvcWebApplicationController {
     @RequestMapping(value = { "/delete-user-{jobId}" }, method = RequestMethod.GET)
     public String deleteUser(@PathVariable String jobId) {
         userService.deleteUserByJobId(jobId);
-        return "redirect:/list";
+        return "redirect:/listUser";
     }
 
     @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
-    public String listProductIns(@PathVariable String type, ModelMap model) {
+    public String listProduct(@PathVariable String type, ModelMap model) {
         List<ProductIns> productInsList = productInsService.findByType(type);
         model.addAttribute("type", type);
         model.addAttribute("productInsList", productInsList);
@@ -269,7 +264,7 @@ public class MvcWebApplicationController {
     }
 
     @RequestMapping(value = "/add-product-{type}", method = RequestMethod.GET)
-    public String addProductIns(@PathVariable String type,ModelMap model) {
+    public String addProduct(@PathVariable String type,ModelMap model) {
         ProductIns productIns = new ProductIns();
         model.addAttribute("type", type);
         model.addAttribute("productIns", productIns);
@@ -278,13 +273,13 @@ public class MvcWebApplicationController {
     }
 
     @RequestMapping(value = "/add-product-{type}", method = RequestMethod.POST)
-    public String saveProductIns(@Valid ProductIns productIns, BindingResult result, @PathVariable String type, ModelMap model) {
+    public String saveProduct(@Valid ProductIns productIns, BindingResult result, @PathVariable String type, ModelMap model) {
         if ("car".equals(type)) {
+            // 0 相等，1 不相等
             if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
-                // 0 相等，1 不相等
                 FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
                 result.addError(insMoneyError);
-                model.addAttribute("car", true);
+                model.addAttribute("type", type);
                 model.addAttribute("loginUser", getPrincipal());
                 return "addProductIns";
             }
@@ -296,21 +291,84 @@ public class MvcWebApplicationController {
         } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
             FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
             result.addError(employeeIdError);
-            model.addAttribute("car", true);
+            model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductIns";
         } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
             FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
             result.addError(employeeError);
-            model.addAttribute("car", true);
+            model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductIns";
         } else {
             productInsService.save(productIns);
-            model.addAttribute("car", true);
+            model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductInsDone";
         }
+    }
+
+    @RequestMapping(value = "/edit-product-{type}-{id}", method = RequestMethod.GET)
+    public String editProduct(@PathVariable String type, @PathVariable int id, ModelMap model) {
+        ProductIns productIns = productInsService.findById(id);
+        model.addAttribute("productIns", productIns);
+        model.addAttribute("edit", true);
+        model.addAttribute("type", type);
+        model.addAttribute("loginUser", getPrincipal());
+        return "addProductIns";
+    }
+
+    @RequestMapping(value = { "/edit-product-{type}-{id}" }, method = RequestMethod.POST)
+    public String updateProduct(@PathVariable String type, @PathVariable int id, @Valid ProductIns productIns, BindingResult result, ModelMap model) {
+        String path = "/edit-product-" + type + "-" + id;
+        if ("car".equals(type)) {
+            // 0 相等，1 不相等
+            if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
+                FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
+                result.addError(insMoneyError);
+                model.addAttribute("type", type);
+                model.addAttribute("loginUser", getPrincipal());
+                return "redirect:/" + path;
+            }
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
+            return "redirect:/" + path;
+        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
+            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeIdError);
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
+            return "redirect:/" + path;
+        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
+            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
+            result.addError(employeeError);
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
+            return "redirect:/" + path;
+        } else {
+            productInsService.save(productIns);
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
+            return "addProductInsDone";
+        }
+    }
+
+    @RequestMapping(value = { "/delete-product-{type}-{id}" }, method = RequestMethod.GET)
+    public String deleteProduct(@PathVariable String type, @PathVariable int id) {
+        productInsService.deleteById(id);
+        String page = "";
+        if ("car".equals(type)) {
+            page = "redirect:/list-product-car";
+        } else if ("person".equals(type)) {
+            page = "redirect:/list-product-person";
+        } else if ("team".equals(type)) {
+            page = "redirect:/list-product-team";
+        } else if ("card".equals(type)) {
+            page = "redirect:/list-product-card";
+        }
+        return page;
     }
 
     @RequestMapping(value = "/export-product-{type}", method = RequestMethod.GET)

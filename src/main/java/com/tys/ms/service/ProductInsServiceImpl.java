@@ -30,8 +30,8 @@ public class ProductInsServiceImpl implements ProductInsService {
     }
 
     @Override
-    public void deleteByEmployeeId(String employeeId) {
-        productInsDao.deleteByEmployeeId(employeeId);
+    public void deleteById(int id) {
+        productInsDao.deleteById(id);
     }
 
     @Override

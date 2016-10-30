@@ -67,18 +67,18 @@
 
                                     <sec:authorize access="hasRole('ADMIN')">
                                         <td>
-                                            <a href="<c:url value='/edit-user-${user.jobId}' />" class="waves-effect waves-light btn">修改</a>
+                                            <a href="<c:url value='/edit-product-car-${productIns.id}' />" class="waves-effect waves-light btn">修改</a>
                                         </td>
                                         <td>
-                                            <a href="#${user.jobId}" class="waves-effect waves-light btn modal-trigger">删除</a>
-                                            <div id="${user.jobId}" class="modal">
+                                            <a href="#${productIns.id}" class="waves-effect waves-light btn modal-trigger">删除</a>
+                                            <div id="${productIns.id}" class="modal">
                                                 <div class="modal-content">
                                                     <h4>确认删除${user.jobId}？</h4>
                                                     <p>一旦删除，无法撤销！确定想要删除？</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">取消</a>
-                                                    <a href="<c:url value='/delete-user-${user.jobId}' />" class=" modal-action modal-close waves-effect waves-green btn">确认</a>
+                                                    <a href="<c:url value='/delete-product-car-${productIns.id}' />" class=" modal-action modal-close waves-effect waves-green btn">确认</a>
                                                 </div>
                                             </div>
                                         </td>

@@ -25,17 +25,17 @@
                         <h5 class="black-text">添加成功</h5>
                     </div>
                     <div class="card-action">
-                        <c:if test="${car}">
+                        <c:if test="${type == 'car'}">
                             <a href="<c:url value="/list-product-car" />">确定，返回列表</a>
                         </c:if>
-                        <c:if test="${card}">
-                            <a href="<c:url value="/list-product-card" />">确定，返回列表</a>
-                        </c:if>
-                        <c:if test="${person}">
+                        <c:if test="${type == 'person'}">
                             <a href="<c:url value="/list-product-person" />">确定，返回列表</a>
                         </c:if>
-                        <c:if test="${team}">
+                        <c:if test="${type == 'team'}">
                             <a href="<c:url value="/list-product-team" />">确定，返回列表</a>
+                        </c:if>
+                        <c:if test="${type == 'card'}">
+                            <a href="<c:url value="/list-product-card" />">确定，返回列表</a>
                         </c:if>
                     </div>
 
