@@ -376,6 +376,11 @@ public class MvcWebApplicationController {
         List<ProductIns> productInsList = productInsService.findByType(type);
         List<String> jobIdList = userService.findAllDownJobId(getPrincipal());
         List<ProductIns> targetProductInsList = new ArrayList<>();
+
+        if ("ADMIN".equals(userService.findByJobId(getPrincipal()).getUserProfile().getType())) {
+            targetProductInsList.addAll(productInsList);
+        }
+
         for (int i = 0; i < jobIdList.size(); i++) {
             for (int j = 0; j < productInsList.size(); j++) {
                 if (productInsList.get(j).getEmployeeId().equals(jobIdList.get(i))) {
