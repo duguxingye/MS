@@ -286,24 +286,7 @@ public class MvcWebApplicationController {
             }
         }
         model.addAttribute("productInsList", targetProductInsList);
-//        return new ModelAndView(new ProductXlsView(), model);
         return new ModelAndView(new ProductXlsxView(), model);
-    }
-
-    @RequestMapping(value = "/list-product-person", method = RequestMethod.GET)
-    public String listProductPerson(ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType("person");
-        model.addAttribute("productInsList", productInsList);
-        model.addAttribute("loginUser", getPrincipal());
-        return "listProductPerson";
-    }
-
-    @RequestMapping(value = "/list-product-team", method = RequestMethod.GET)
-    public String listProductTeam(ModelMap model) {
-        List<ProductIns> productInsList = productInsService.findByType("team");
-        model.addAttribute("productInsList", productInsList);
-        model.addAttribute("loginUser", getPrincipal());
-        return "listProductTeam";
     }
 
     @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
@@ -314,19 +297,29 @@ public class MvcWebApplicationController {
         return "listProductCard";
     }
 
-    @RequestMapping(value = "/add-product-car", method = RequestMethod.GET)
-    public String addProductCar(ModelMap model) {
+    @RequestMapping(value = "/add-product-{type}", method = RequestMethod.GET)
+    public String addProductCar(@PathVariable String type,ModelMap model) {
         ProductIns productIns = new ProductIns();
         model.addAttribute("productIns", productIns);
-        model.addAttribute("car", true);
+        model.addAttribute("type", type);
         model.addAttribute("loginUser", getPrincipal());
         return "addProductIns";
     }
 
-    @RequestMapping(value = "/add-product-car", method = RequestMethod.POST)
-    public String saveProductCar(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
+    @RequestMapping(value = "/add-product-{type}", method = RequestMethod.POST)
+    public String saveProductCar(@Valid ProductIns productIns, BindingResult result, @PathVariable String type, ModelMap model) {
+        if ("car".equals(type)) {
+            if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
+                // 0 相等，1 不相等
+                FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
+                result.addError(insMoneyError);
+                model.addAttribute("car", true);
+                model.addAttribute("loginUser", getPrincipal());
+                return "addProductIns";
+            }
+        }
         if (result.hasErrors()) {
-            model.addAttribute("car", true);
+            model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductIns";
         } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
@@ -338,13 +331,6 @@ public class MvcWebApplicationController {
         } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
             FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
             result.addError(employeeError);
-            model.addAttribute("car", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
-            // 0 相等，1 不相等
-            FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
-            result.addError(insMoneyError);
             model.addAttribute("car", true);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductIns";

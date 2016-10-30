@@ -90,8 +90,8 @@
                         </a>
                         <ul>
                             <li><a class="btn-floating tooltipped green" data-position="top" data-delay="50" data-tooltip="导入Excel"><i class="material-icons">unarchive</i></a></li>
-                            <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-car' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
-                            <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-car' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
+                            <li><a class="btn-floating tooltipped red" href="<c:url value='/add-product-card' />" data-position="top" data-delay="50" data-tooltip="添加"><i class="material-icons">add</i></a></li>
+                            <li><a class="btn-floating tooltipped blue" href="<c:url value='/export-product-card' />" data-position="top" data-delay="50" data-tooltip="导出为Excel"><i class="material-icons">archive</i></a></li>
                         </ul>
                     </div>
                 </div>
