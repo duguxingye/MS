@@ -349,111 +349,6 @@ public class MvcWebApplicationController {
         return bd1.add(bd2).add(bd3);
     }
 
-    @RequestMapping(value = "/add-product-person", method = RequestMethod.GET)
-    public String addProductPerson(ModelMap model) {
-        ProductIns productIns = new ProductIns();
-        model.addAttribute("productIns", productIns);
-        model.addAttribute("person", true);
-        model.addAttribute("loginUser", getPrincipal());
-        return "addProductIns";
-    }
-
-    @RequestMapping(value = "/add-product-person", method = RequestMethod.POST)
-    public String saveProductPerson(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
-        if (result.hasErrors()) {
-            model.addAttribute("person", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
-            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeIdError);
-            model.addAttribute("person", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
-            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeError);
-            model.addAttribute("person", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else {
-            productInsService.save(productIns);
-            model.addAttribute("person", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductInsDone";
-        }
-    }
-
-    @RequestMapping(value = "/add-product-team", method = RequestMethod.GET)
-    public String addProductTeam(ModelMap model) {
-        ProductIns productIns = new ProductIns();
-        model.addAttribute("productIns", productIns);
-        model.addAttribute("team", true);
-        model.addAttribute("loginUser", getPrincipal());
-        return "addProductIns";
-    }
-
-    @RequestMapping(value = "/add-product-team", method = RequestMethod.POST)
-    public String saveProductTeam(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
-        if (result.hasErrors()) {
-            model.addAttribute("team", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
-            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeIdError);
-            model.addAttribute("team", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
-            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeError);
-            model.addAttribute("team", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else {
-            productInsService.save(productIns);
-            model.addAttribute("team", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductInsDone";
-        }
-    }
-
-    @RequestMapping(value = "/add-product-card", method = RequestMethod.GET)
-    public String addProductCard(ModelMap model) {
-        ProductIns productIns = new ProductIns();
-        model.addAttribute("productIns", productIns);
-        model.addAttribute("card", true);
-        model.addAttribute("loginUser", getPrincipal());
-        return "addProductIns";
-    }
-
-    @RequestMapping(value = "/add-product-card", method = RequestMethod.POST)
-    public String saveProductCard(@Valid ProductIns productIns, BindingResult result, ModelMap model) {
-        if (result.hasErrors()) {
-            model.addAttribute("card", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
-            FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeIdError);
-            model.addAttribute("card", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
-            FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
-            result.addError(employeeError);
-            model.addAttribute("card", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductIns";
-        } else {
-            productInsService.save(productIns);
-            model.addAttribute("card", true);
-            model.addAttribute("loginUser", getPrincipal());
-            return "addProductInsDone";
-        }
-    }
-
     @RequestMapping(value = "/AccessDenied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loginUser", getPrincipal());
@@ -481,16 +376,16 @@ public class MvcWebApplicationController {
         return userProfileService.findAll();
     }
 
-    @RequestMapping(value="/upload-product", method = RequestMethod.GET)
-    public String uploadProductPage(ModelMap model) {
-        model.addAttribute("type", "car");
+    @RequestMapping(value="/upload-product-{type}", method = RequestMethod.GET)
+    public String uploadProductPage(@PathVariable String type, ModelMap model) {
+        model.addAttribute("type", type);
         FileBucket fileModel = new FileBucket();
         model.addAttribute("fileBucket", fileModel);
         return "uploadProduct";
     }
 
-    @RequestMapping(value="/upload-product", method = RequestMethod.POST)
-    public String saveUploadProduct(@Valid FileBucket fileBucket, BindingResult result, ModelMap model) throws IOException {
+    @RequestMapping(value="/upload-product-{type}", method = RequestMethod.POST)
+    public String saveUploadProduct(@Valid FileBucket fileBucket, BindingResult result, @PathVariable String type, ModelMap model) throws IOException {
         if (result.hasErrors()) {
             return "uploadProduct";
         } else {
@@ -569,12 +464,13 @@ public class MvcWebApplicationController {
                 cell = row.getCell((short)14);
                 insMoney = (double) cell.getNumericCellValue();
 
+
                 ProductIns productIns = new ProductIns();
                 productIns.setCompany(company);
                 productIns.setEmployee(employee);
                 productIns.setEmployeeId(employeeId);
                 productIns.setInsCompany(insCompany);
-                productIns.setInsType("car");
+                productIns.setInsType(type);
                 productIns.setProductType(productType);
                 productIns.setInsIllustration(insIllustration);
                 productIns.setInsPerson(insPerson);
@@ -591,7 +487,7 @@ public class MvcWebApplicationController {
                 productInsService.save(productIns);
             }
 
-            model.addAttribute("person", true);
+            model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductInsDone";
 
