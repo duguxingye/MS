@@ -182,7 +182,7 @@ public class MvcWebApplicationController {
         User user = userService.findByJobId(jobId);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        int upId = userService.findByJobId(jobId).getUserProfile().getId();
+        int upId = userService.findByJobId(getPrincipal()).getUserProfile().getId();
         List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
         model.addAttribute("profile", userProfileList);
         model.addAttribute("loginUser", getPrincipal());
@@ -193,7 +193,7 @@ public class MvcWebApplicationController {
     public String updateUser(@Valid User user, BindingResult result, ModelMap model, @PathVariable String jobId) {
         if (result.hasErrors()) {
             model.addAttribute("edit", true);
-            int upId = userService.findByJobId(jobId).getUserProfile().getId();
+            int upId = userService.findByJobId(getPrincipal()).getUserProfile().getId();
             List<UserProfile> userProfileList = userProfileService.findDownAll(upId);
             model.addAttribute("profile", userProfileList);
             return "addUser";
@@ -242,7 +242,7 @@ public class MvcWebApplicationController {
     @RequestMapping(value = { "/delete-user-{jobId}" }, method = RequestMethod.GET)
     public String deleteUser(@PathVariable String jobId) {
         userService.deleteUserByJobId(jobId);
-        return "redirect:/listUser";
+        return "redirect:/list-user";
     }
 
     @RequestMapping(value = "/list-product-{type}", method = RequestMethod.GET)
