@@ -2,7 +2,7 @@ package com.tys.ms.controller;
 
 import com.geetest.sdk.java.GeetestLib;
 import com.geetest.sdk.java.web.demo.GeetestConfig;
-import com.tys.ms.dao.FileBucket;
+import com.tys.ms.model.FileBucket;
 import com.tys.ms.view.ProductXlsxView;
 import com.tys.ms.model.ProductIns;
 import com.tys.ms.model.User;
@@ -26,7 +26,6 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -428,44 +426,53 @@ public class MvcWebApplicationController {
 
     @RequestMapping(value="/upload-product-{type}", method = RequestMethod.GET)
     public String uploadProductPage(@PathVariable String type, ModelMap model) {
+        FileBucket fileBucket = new FileBucket();
+        model.addAttribute("fileBucket", fileBucket);
         model.addAttribute("type", type);
-        FileBucket fileModel = new FileBucket();
-        model.addAttribute("fileBucket", fileModel);
+        model.addAttribute("loginUser", getPrincipal());
         return "uploadProduct";
     }
 
     @RequestMapping(value="/upload-product-{type}", method = RequestMethod.POST)
     public String saveUploadProduct(@Valid FileBucket fileBucket, BindingResult result, @PathVariable String type, ModelMap model) throws IOException {
+        if (fileBucket.getFile() == null) {
+            model.addAttribute("error", true);
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
+            return "uploadProduct";
+        }
         if (result.hasErrors()) {
+            model.addAttribute("error", true);
+            model.addAttribute("type", type);
+            model.addAttribute("loginUser", getPrincipal());
             return "uploadProduct";
         } else {
             MultipartFile multipartFile = fileBucket.getFile();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(multipartFile.getBytes());
             Workbook wookbook = null ;
-            //判断是否为excel类型文件
             if (multipartFile.getOriginalFilename().endsWith("xls")) {
-                //2003版本的excel，用.xls结尾
-                wookbook = new HSSFWorkbook(byteArrayInputStream); //得到工作簿
+                wookbook = new HSSFWorkbook(byteArrayInputStream);
             } else if (multipartFile.getOriginalFilename().endsWith("xlsx")) {
-                //2007版本的excel，用.xlsx结尾
-                wookbook = new XSSFWorkbook(byteArrayInputStream); //得到工作簿
+                wookbook = new XSSFWorkbook(byteArrayInputStream);
             } else {
-                //不是excel类型文件
-                return "upload";
-            }
-
-            //得到一个工作表
-            Sheet sheet = wookbook.getSheetAt(0);
-            //获得表头
-            Row rowHead = sheet.getRow(0);
-            //判断表头是否正确
-            if(rowHead.getPhysicalNumberOfCells() != 15) {
-                System.out.println("表头的数量不对!");
+                model.addAttribute("error", true);
+                model.addAttribute("type", type);
+                model.addAttribute("loginUser", getPrincipal());
                 return "uploadProduct";
             }
-            //获得数据的总行数
+
+            Sheet sheet = wookbook.getSheetAt(0);
+            Row rowHead = sheet.getRow(0);
+
+            if(rowHead.getPhysicalNumberOfCells() != 15) {
+                model.addAttribute("error", true);
+                model.addAttribute("type", type);
+                model.addAttribute("loginUser", getPrincipal());
+                return "uploadProduct";
+            }
+
             int totalRowNum = sheet.getLastRowNum();
-            //要获得属性
+
             String company = "";
             String employee = "";
             String employeeId = "";
@@ -480,11 +487,10 @@ public class MvcWebApplicationController {
             Double carMandatoryMoney = 0.00;
             Double carTaxMoney =0.00;
             Double insMoney = 0.00;
-            //获得所有数据
+
             for(int i = 1 ; i <= totalRowNum ; i++) {
-                //获得第i行对象
                 Row row = sheet.getRow(i);
-                //获得获得第i行第1列的 String类型对象，以此类推
+
                 Cell cell = row.getCell((short)1);
                 company = cell.getStringCellValue().toString();
                 cell = row.getCell((short)2);
@@ -514,7 +520,6 @@ public class MvcWebApplicationController {
                 cell = row.getCell((short)14);
                 insMoney = (double) cell.getNumericCellValue();
 
-
                 ProductIns productIns = new ProductIns();
                 productIns.setCompany(company);
                 productIns.setEmployee(employee);
@@ -531,9 +536,6 @@ public class MvcWebApplicationController {
                 productIns.setCarMandatoryMoney(String.valueOf(carMandatoryMoney));
                 productIns.setCarTaxMoney(String.valueOf(carTaxMoney));
                 productIns.setInsMoney(String.valueOf(insMoney));
-                System.out.println("--------------------------");
-                System.out.println(productIns);
-                System.out.println("--------------------------");
                 productInsService.save(productIns);
             }
 

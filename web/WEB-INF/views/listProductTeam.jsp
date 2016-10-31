@@ -32,7 +32,6 @@
                                 <th>险种</th>
                                 <th>投保类型</th>
                                 <th>报价时间</th>
-                                <th>车辆类型</th>
                                 <th>保费合计</th>
                                 <sec:authorize access="hasRole('ADMIN')">
                                     <th></th>
@@ -51,7 +50,6 @@
                                     <td>${productIns.productType}</td>
                                     <td>${productIns.insIllustration}</td>
                                     <td>${productIns.insTime}</td>
-                                    <td>${productIns.carType}</td>
                                     <td>${productIns.insMoney}</td>
                                     <sec:authorize access="hasRole('ADMIN')">
                                         <td>

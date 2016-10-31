@@ -50,7 +50,6 @@
                                     <td>${productIns.productType}</td>
                                     <td>${productIns.insIllustration}</td>
                                     <td>${productIns.insTime}</td>
-                                    <td>${productIns.carType}</td>
                                     <td>${productIns.insMoney}</td>
                                     <sec:authorize access="hasRole('ADMIN')">
                                         <td>

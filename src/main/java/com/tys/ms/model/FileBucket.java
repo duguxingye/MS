@@ -1,11 +1,7 @@
-package com.tys.ms.dao;
+package com.tys.ms.model;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-/**
- * Created by Administrator on 2016/10/27.
- */
 public class FileBucket {
     MultipartFile file;
 

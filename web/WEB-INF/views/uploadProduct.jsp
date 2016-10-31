@@ -35,6 +35,13 @@
                 </div>
 
                 <div class="row">
+                    <c:if test="${error}">
+                        <div class="card red">
+                            <p class="center white-text">未选择Excel文件或Excel文件错误</p>
+                        </div>
+                    </c:if>
+
+                <div class="row">
                     <div class="input-field col s12 center">
                         <input type="submit" value="确定上传" class="waves-effect waves-light btn-large red">
                     </div>
