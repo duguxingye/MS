@@ -25,7 +25,7 @@ public class ProductXlsxView extends AbstractXlsxView {
         List<ProductIns> productInsList = (List<ProductIns>) map.get("productInsList");
 
         // create excel xls sheet
-        Sheet sheet = workbook.createSheet("SpringView");
+        Sheet sheet = workbook.createSheet("Product");
 
         // create header row
         Row header = sheet.createRow(0);

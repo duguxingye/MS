@@ -99,7 +99,7 @@
                         <mvc:input type="hidden" path="hasLocked" id="hasLocked"/>
 
                         <br>
-                        <button class="btn waves-effect waves-light" type="submit" name="action">确定新增会员</button>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">确定</button>
                         <a style="padding-left: 50px;" href="<c:url value='/list-user' />">取消</a>
                     </mvc:form>
 
