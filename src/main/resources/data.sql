@@ -120,7 +120,4 @@ FROM
 WHERE
   p.type != 'ADMIN';
 
-# alter table ms.product_ins change ins_illstration ins_illustration varchar(30);
-# alter table ms.product_ins change ins_persion ins_person varchar(30);
-# alter table ms.product_ins add column product_type varchar(30) not null;
 alter table ms.app_user drop column has_passed;
