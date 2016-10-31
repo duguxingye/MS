@@ -23,8 +23,7 @@
 						<img src="static/image/index/done.png">
 					</div>
 					<div class="card-content">
-						<h5 class="black-text">成功</h5>
-						<p class="black-text">${success}</p>
+						<h5 class="black-text">添加成功</h5>
 					</div>
                     <div class="card-action">
                         <sec:authorize access="hasRole('AREA') or hasRole('GROUP') or hasRole('ADMIN')">

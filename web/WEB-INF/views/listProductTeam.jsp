@@ -18,7 +18,7 @@
     <main>
         <div class="section">
 
-            <h5 style="padding-left: 10px;">车险列表</h5>
+            <h5 style="padding-left: 10px;">列表</h5>
             <div class="row">
                 <div class="col s12">
                     <c:if test="${not empty productInsList}">

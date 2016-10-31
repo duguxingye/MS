@@ -57,7 +57,8 @@
 
                     <div class="row">
                         <div class="col s12 m12">
-                            <button  type="submit" class="waves-effect waves-light btn">更新密码</button> or <a href="<c:url value='/info-user' />">取消</a>
+                            <button  type="submit" class="waves-effect waves-light btn">更新密码</button>
+                            <a style="padding-left: 50px;" href="<c:url value='/info-user' />">取消</a>
                         </div>
                     </div>
                     </div>

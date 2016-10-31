@@ -173,7 +173,6 @@ public class MvcWebApplicationController {
 
         userService.saveUser(user);
 
-        model.addAttribute("success", "会员 " + user.getName() + " " + " 添加成功");
         model.addAttribute("loginUser", getPrincipal());
         return "addUserDone";
     }
@@ -202,7 +201,6 @@ public class MvcWebApplicationController {
 
         userService.updateUser(user);
 
-        model.addAttribute("success", "User " + user.getName()  + " updated successfully");
         model.addAttribute("loginUser", getPrincipal());
         return "addUserDone";
     }
@@ -211,6 +209,7 @@ public class MvcWebApplicationController {
     public String resetPwd(ModelMap model, @PathVariable String jobId) {
         User user = userService.findByJobId(jobId);
         model.addAttribute("user", user);
+        model.addAttribute("loginUser", getPrincipal());
         return "resetPwd";
     }
 
@@ -220,17 +219,21 @@ public class MvcWebApplicationController {
         if (!BCrypt.checkpw(user.getOldPassword(), user2.getPassword())) {
             FieldError passwordError =new FieldError("user","password",messageSource.getMessage("valid.oldPassword", new String[]{user.getPassword()}, Locale.getDefault()));
             result.addError(passwordError);
+            model.addAttribute("user", user);
+            model.addAttribute("loginUser", getPrincipal());
             return "resetPwd";
         } else if(!user.getPassword().equals(user.getRetypePassword())) {
             System.out.println(user.getPassword());
             System.out.println(user.getRetypePassword());
             FieldError passwordError =new FieldError("user","password",messageSource.getMessage("valid.passwordConfDiff", new String[]{user.getPassword()}, Locale.getDefault()));
             result.addError(passwordError);
+            model.addAttribute("user", user);
+            model.addAttribute("loginUser", getPrincipal());
             return "resetPwd";
         } else {
             user2.setPassword(String.valueOf(user.getPassword()));
             userService.updateUser(user2);
-            model.addAttribute("success", "User " + user.getName()  + " updated successfully");
+            model.addAttribute("user", user);
             model.addAttribute("loginUser", getPrincipal());
             return "resetPwdDone";
         }
@@ -390,40 +393,6 @@ public class MvcWebApplicationController {
         return new ModelAndView(new ProductXlsxView(), model);
     }
 
-    public static BigDecimal add(String num1, String num2, String num3) {
-        BigDecimal bd1 = new BigDecimal(num1);
-        BigDecimal bd2 = new BigDecimal(num2);
-        BigDecimal bd3 = new BigDecimal(num3);
-        return bd1.add(bd2).add(bd3);
-    }
-
-    @RequestMapping(value = "/AccessDenied", method = RequestMethod.GET)
-    public String accessDeniedPage(ModelMap model) {
-        model.addAttribute("loginUser", getPrincipal());
-        return "accessDenied";
-    }
-
-    private String getPrincipal() {
-        String userName = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails)principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        return userName;
-    }
-
-    private boolean isCurrentAuthenticationAnonymous() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authenticationTrustResolver.isAnonymous(authentication);
-    }
-
-    @ModelAttribute("roles")
-    public List<UserProfile> initializeProfiles() {
-        return userProfileService.findAll();
-    }
-
     @RequestMapping(value="/upload-product-{type}", method = RequestMethod.GET)
     public String uploadProductPage(@PathVariable String type, ModelMap model) {
         FileBucket fileBucket = new FileBucket();
@@ -492,33 +461,33 @@ public class MvcWebApplicationController {
                 Row row = sheet.getRow(i);
 
                 Cell cell = row.getCell((short)1);
-                company = cell.getStringCellValue().toString();
+                company = cell.getStringCellValue();
                 cell = row.getCell((short)2);
-                employee = cell.getStringCellValue().toString();
+                employee = cell.getStringCellValue();
                 cell = row.getCell((short)3);
-                employeeId = cell.getStringCellValue().toString();
+                employeeId = cell.getStringCellValue();
                 cell = row.getCell((short)4);
-                insCompany = cell.getStringCellValue().toString();
+                insCompany = cell.getStringCellValue();
                 cell = row.getCell((short)5);
-                productType = cell.getStringCellValue().toString();
+                productType = cell.getStringCellValue();
                 cell = row.getCell((short)6);
-                insIllustration = cell.getStringCellValue().toString();
+                insIllustration = cell.getStringCellValue();
                 cell = row.getCell((short)7);
-                insPerson = cell.getStringCellValue().toString();
+                insPerson = cell.getStringCellValue();
                 cell = row.getCell((short)8);
-                carNumber = cell.getStringCellValue().toString();
+                carNumber = cell.getStringCellValue();
                 cell = row.getCell((short)9);
-                insTime = cell.getStringCellValue().toString();
+                insTime = cell.getStringCellValue();
                 cell = row.getCell((short)10);
-                carType = cell.getStringCellValue().toString();
+                carType = cell.getStringCellValue();
                 cell = row.getCell((short)11);
-                carBusinessMoney = (double) cell.getNumericCellValue();
+                carBusinessMoney = cell.getNumericCellValue();
                 cell = row.getCell((short)12);
-                carMandatoryMoney = (double) cell.getNumericCellValue();
+                carMandatoryMoney = cell.getNumericCellValue();
                 cell = row.getCell((short)13);
-                carTaxMoney = (double) cell.getNumericCellValue();
+                carTaxMoney = cell.getNumericCellValue();
                 cell = row.getCell((short)14);
-                insMoney = (double) cell.getNumericCellValue();
+                insMoney = cell.getNumericCellValue();
 
                 ProductIns productIns = new ProductIns();
                 productIns.setCompany(company);
@@ -542,40 +511,41 @@ public class MvcWebApplicationController {
             model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
             return "addProductInsDone";
-
         }
     }
 
-    public  Object getCellValue(Cell cell){
-        Object value = null;
-        DecimalFormat df = new DecimalFormat("0");  //格式化number String字符
-        SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");  //日期格式化
-        DecimalFormat df2 = new DecimalFormat("0.00");  //格式化数字
-
-        switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_STRING:
-                value = cell.getRichStringCellValue().getString();
-                break;
-            case Cell.CELL_TYPE_NUMERIC:
-                if("General".equals(cell.getCellStyle().getDataFormatString())){
-                    value = df.format(cell.getNumericCellValue());
-                }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
-                    value = sdf.format(cell.getDateCellValue());
-                }else{
-                    value = df2.format(cell.getNumericCellValue());
-                }
-                break;
-            case Cell.CELL_TYPE_BOOLEAN:
-                value = cell.getBooleanCellValue();
-                break;
-            case Cell.CELL_TYPE_BLANK:
-                value = "";
-                break;
-            default:
-                break;
-        }
-        return value;
+    public static BigDecimal add(String num1, String num2, String num3) {
+        BigDecimal bd1 = new BigDecimal(num1);
+        BigDecimal bd2 = new BigDecimal(num2);
+        BigDecimal bd3 = new BigDecimal(num3);
+        return bd1.add(bd2).add(bd3);
     }
 
+    @RequestMapping(value = "/AccessDenied", method = RequestMethod.GET)
+    public String accessDeniedPage(ModelMap model) {
+        model.addAttribute("loginUser", getPrincipal());
+        return "accessDenied";
+    }
+
+    private String getPrincipal() {
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
+
+    private boolean isCurrentAuthenticationAnonymous() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authenticationTrustResolver.isAnonymous(authentication);
+    }
+
+    @ModelAttribute("roles")
+    public List<UserProfile> initializeProfiles() {
+        return userProfileService.findAll();
+    }
 
 }
