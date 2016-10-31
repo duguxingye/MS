@@ -31,7 +31,7 @@ public class MvcWebApplicationInitializer extends AbstractAnnotationConfigDispat
         return multipartConfigElement;
     }
 
-    private static final String LOCATION = "E:/temp/";
+    private static final String LOCATION = "C:/temp/";
 
     private static final long MAX_FILE_SIZE = 5242880; // 5MB
 

@@ -19,7 +19,7 @@ public class ProductXlsxView extends AbstractXlsxView {
     @Override
     protected void buildExcelDocument(Map<String, Object> map, Workbook workbook, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         // change the file name
-        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"NewProduct.xlsx\"");
+        httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\"Product.xlsx\"");
 
         @SuppressWarnings("unchecked")
         List<ProductIns> productInsList = (List<ProductIns>) map.get("productInsList");

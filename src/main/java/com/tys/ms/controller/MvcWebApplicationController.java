@@ -223,8 +223,6 @@ public class MvcWebApplicationController {
             model.addAttribute("loginUser", getPrincipal());
             return "resetPwd";
         } else if(!user.getPassword().equals(user.getRetypePassword())) {
-            System.out.println(user.getPassword());
-            System.out.println(user.getRetypePassword());
             FieldError passwordError =new FieldError("user","password",messageSource.getMessage("valid.passwordConfDiff", new String[]{user.getPassword()}, Locale.getDefault()));
             result.addError(passwordError);
             model.addAttribute("user", user);
@@ -321,33 +319,41 @@ public class MvcWebApplicationController {
 
     @RequestMapping(value = { "/edit-product-{type}-{id}" }, method = RequestMethod.POST)
     public String updateProduct(@PathVariable String type, @PathVariable int id, @Valid ProductIns productIns, BindingResult result, ModelMap model) {
-        String path = "/edit-product-" + type + "-" + id;
+//        String path = "/edit-product-" + type + "-" + id;
         if ("car".equals(type)) {
             // 0 相等，1 不相等
             if (add(productIns.getCarBusinessMoney(), productIns.getCarMandatoryMoney(), productIns.getCarTaxMoney()).compareTo(new BigDecimal(productIns.getInsMoney())) != 0) {
                 FieldError insMoneyError =new FieldError("productIns","insMoney",messageSource.getMessage("valid.calculate.productIns.insMoney", new String[]{productIns.getInsMoney()}, Locale.getDefault()));
                 result.addError(insMoneyError);
+                model.addAttribute("productIns", productIns);
+                model.addAttribute("edit", true);
                 model.addAttribute("type", type);
                 model.addAttribute("loginUser", getPrincipal());
-                return "redirect:/" + path;
+                return "addProductIns";
             }
         }
         if (result.hasErrors()) {
+            model.addAttribute("productIns", productIns);
+            model.addAttribute("edit", true);
             model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
-            return "redirect:/" + path;
+            return "addProductIns";
         } else if (userService.findByJobId(productIns.getEmployeeId()) == null) {
             FieldError employeeIdError =new FieldError("productIns","employeeId",messageSource.getMessage("non.exist.employeeId", new String[]{productIns.getEmployeeId()}, Locale.getDefault()));
             result.addError(employeeIdError);
+            model.addAttribute("productIns", productIns);
+            model.addAttribute("edit", true);
             model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
-            return "redirect:/" + path;
+            return "addProductIns";
         } else if (!userService.findByJobId(productIns.getEmployeeId()).getName().equals(productIns.getEmployee())) {
             FieldError employeeError =new FieldError("productIns","employee",messageSource.getMessage("non.corresponding.employee", new String[]{productIns.getEmployee(), productIns.getEmployeeId()}, Locale.getDefault()));
             result.addError(employeeError);
+            model.addAttribute("productIns", productIns);
+            model.addAttribute("edit", true);
             model.addAttribute("type", type);
             model.addAttribute("loginUser", getPrincipal());
-            return "redirect:/" + path;
+            return "addProductIns";
         } else {
             productInsService.update(productIns);
             model.addAttribute("type", type);

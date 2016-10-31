@@ -10,10 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Java SDK
- * 
- */
 public class GeetestLib {
 
 	protected final String verName = "3.3.0";// SDK版本编号
@@ -25,62 +21,29 @@ public class GeetestLib {
 	protected final String registerUrl = "/register.php"; //register url
 	protected final String validateUrl = "/validate.php"; //validate url
 
-	/**
-	 * 极验验证二次验证表单数据 chllenge
-	 */
 	public static final String fn_geetest_challenge = "geetest_challenge";
-	
-	/**
-	 * 极验验证二次验证表单数据 validate
-	 */
+
 	public static final String fn_geetest_validate = "geetest_validate";
-	
-	/**
-	 * 极验验证二次验证表单数据 seccode
-	 */
+
 	public static final String fn_geetest_seccode = "geetest_seccode";
 
-	/**
-	 * 公钥
-	 */
 	private String captchaId = "";
-
-	/**
-	 * 私钥
-	 */
 	
 	private String privateKey = "";
 	
 	private String userId = "";
 
 	private String responseStr = "";
-	
-	/**
-	 * 调试开关，是否输出调试日志
-	 */
+
 	public boolean debugCode = true;
-	
-	/**
-	 * 极验验证API服务状态Session Key
-	 */
+
 	public String gtServerStatusSessionKey = "gt_server_status";
-	
-	/**
-	 * 带参数构造函数
-	 * 
-	 * @param captchaId
-	 * @param privateKey
-	 */
+
 	public GeetestLib(String captchaId, String privateKey) {
 		this.captchaId = captchaId;
 		this.privateKey = privateKey;
 	}
-	
-	/**
-	 * 获取本次验证初始化返回字符串
-	 * 
-	 * @return 初始化结果
-	 */
+
 	public String getResponseStr() {
 		return responseStr;
 	}
@@ -89,11 +52,6 @@ public class GeetestLib {
 		return verName;
 	}
 
-	/**
-	 * 预处理失败后的返回格式串
-	 * 
-	 * @return
-	 */
 	private String getFailPreProcessRes() {
 
 		Long rnd1 = Math.round(Math.random() * 100);
@@ -107,10 +65,6 @@ public class GeetestLib {
 				this.captchaId, challenge);
 	}
 
-	/**
-	 * 预处理成功后的标准串
-	 * 
-	 */
 	private String getSuccessPreProcessRes(String challenge) {
 		
 		gtlog("challenge:" + challenge);
@@ -119,11 +73,6 @@ public class GeetestLib {
 				this.captchaId, challenge);
 	}
 
-	/**
-	 * 验证初始化预处理
-	 *
-	 * @return 1表示初始化成功，0表示初始化失败
-	 */
 	public int preProcess() {
 
 		if (registerChallenge() != 1) {
@@ -135,26 +84,13 @@ public class GeetestLib {
 		return 1;
 
 	}
-	
-	/**
-	 * 验证初始化预处理
-	 *
-	 * @param userid
-	 * @return 1表示初始化成功，0表示初始化失败
-	 */
+
 	public int preProcess(String userid){
 		
 		this.userId = userid;
 		return this.preProcess();
 	}
-	
-	
 
-	/**
-	 * 用captchaID进行注册，更新challenge
-	 * 
-	 * @return 1表示注册成功，0表示注册失败
-	 */
 	private int registerChallenge() {
 		try {
 			String GET_URL = apiUrl + registerUrl+"?gt=" + this.captchaId;
@@ -180,13 +116,6 @@ public class GeetestLib {
 		return 0;
 	}
 
-	/**
-	 * 发送请求，获取服务器返回结果
-	 * 
-	 * @param getURL
-	 * @return 服务器返回结果
-	 * @throws IOException
-	 */
 	private String readContentFromGet(String getURL) throws IOException {
 
 		URL getUrl = new URL(getURL);
@@ -213,16 +142,7 @@ public class GeetestLib {
 
 		return sBuffer.toString();
 	}
-	
-	
-	
-	
-	/**
-	 * 判断一个表单对象值是否为空
-	 * 
-	 * @param gtObj
-	 * @return
-	 */
+
 	protected boolean objIsEmpty(Object gtObj) {
 		if (gtObj == null) {
 			return true;
@@ -235,12 +155,6 @@ public class GeetestLib {
 		return false;
 	}
 
-	/**
-	 * 检查客户端的请求是否合法,三个只要有一个为空，则判断不合法
-	 * 
-	 * @param request
-	 * @return
-	 */
 	private boolean resquestIsLegal(String challenge, String validate, String seccode) {
 
 		if (objIsEmpty(challenge)) {
@@ -257,16 +171,7 @@ public class GeetestLib {
 
 		return true;
 	}
-	
-	
-	/**
-	 * 服务正常的情况下使用的验证方式,向gt-server进行二次验证,获取验证结果
-	 * 
-	 * @param challenge
-	 * @param validate
-	 * @param seccode
-	 * @return 验证结果,1表示验证成功0表示验证失败
-	 */
+
 	public int enhencedValidateRequest(String challenge, String validate, String seccode) {	
 		
 		if (!resquestIsLegal(challenge, validate, seccode)) {
@@ -310,30 +215,13 @@ public class GeetestLib {
 			return 0;
 		}
 	}
-	
-	/**
-	 * 服务正常的情况下使用的验证方式,向gt-server进行二次验证,获取验证结果
-	 * 
-	 * @param challenge
-	 * @param validate
-	 * @param seccode
-	 * @param userid
-	 * @return 验证结果,1表示验证成功0表示验证失败
-	 */
+
 	public int enhencedValidateRequest(String challenge, String validate, String seccode, String userid) {	
 		
 		this.userId = userid;
 		return this.enhencedValidateRequest(challenge, validate, seccode);
 	}
 
-	/**
-	 * failback使用的验证方式
-	 * 
-	 * @param challenge
-	 * @param validate
-	 * @param seccode
-	 * @return 验证结果,1表示验证成功0表示验证失败
-	 */
 	public int failbackValidateRequest(String challenge, String validate, String seccode) {
 
 		gtlog("in failback validate");
@@ -363,16 +251,7 @@ public class GeetestLib {
 
 		return validateResult;
 	}
-	
-	
 
-	/**
-	 *
-	 * @param ans
-	 * @param full_bg_index
-	 * @param img_grp_index
-	 * @return
-	 */
 	private int validateFailImage(int ans, int full_bg_index,
 			int img_grp_index) {
 		final int thread = 3;// 容差值
@@ -408,17 +287,7 @@ public class GeetestLib {
 			return 0;
 		}
 	}
-	
-	
-	
-	
-	/**
-	 * 解码随机参数
-	 * 
-	 * @param encodeStr
-	 * @param challenge
-	 * @return
-	 */
+
 	private int decodeResponse(String challenge, String string) {
 		if (string.length() > 100) {
 			return 0;
@@ -454,12 +323,6 @@ public class GeetestLib {
 
 	}
 
-	/**
-	 * 输入的两位的随机数字,解码出偏移量
-	 * 
-	 * @param randStr
-	 * @return
-	 */
 	private int decodeRandBase(String challenge) {
 
 		String base = challenge.substring(32, 34);
@@ -479,14 +342,7 @@ public class GeetestLib {
 		return decodeRes;
 
 	}
-	
-	
 
-	/**
-	 * 输出debug信息，需要开启debugCode
-	 * 
-	 * @param message
-	 */
 	public void gtlog(String message) {
 		if (debugCode) {
 			System.out.println("gtlog: " + message);
@@ -498,16 +354,6 @@ public class GeetestLib {
 		return validate.equals(encodeStr);
 	}
 
-	/**
-	 * 貌似不是Post方式，后面重构时修改名字
-	 * 
-	 * @param host
-	 * @param path
-	 * @param data
-	 * @param port
-	 * @return
-	 * @throws Exception
-	 */
 	protected String postValidate(String host, String path, String data,
 			int port) throws Exception {
 		String response = "error";
@@ -539,14 +385,6 @@ public class GeetestLib {
 		return response;
 	}
 
-
-	/**
-	 * md5 加密
-	 * 
-	 * @time 2014年7月10日 下午3:30:01
-	 * @param plainText
-	 * @return
-	 */
 	private String md5Encode(String plainText) {
 		String re_md5 = new String();
 		try {

@@ -70,8 +70,8 @@
                                             <a href="<c:url value='/edit-product-car-${productIns.id}' />" class="waves-effect waves-light btn">修改</a>
                                         </td>
                                         <td>
-                                            <a href="#${productIns.id}" class="waves-effect waves-light btn modal-trigger">删除</a>
-                                            <div id="${productIns.id}" class="modal">
+                                            <a href="#car${productIns.id}" class="waves-effect waves-light btn modal-trigger">删除</a>
+                                            <div id="car${productIns.id}" class="modal">
                                                 <div class="modal-content">
                                                     <h4>确认删除？</h4>
                                                     <p>一旦删除，无法撤销！确定想要删除？</p>
